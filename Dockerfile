@@ -4,7 +4,7 @@ FROM node:20-alpine AS builder
 # Set working directory
 WORKDIR /app
 
-# Accept environment variables at build time
+# Accept environment variables at build time (optional override if not using .env.local)
 ARG MONGO_URI
 ARG NEXT_PUBLIC_BASE_URL
 ARG NEXT_PUBLIC_BASE_URL_API
@@ -26,6 +26,10 @@ RUN npm ci
 
 # Copy the rest of the project
 COPY . .
+
+# Ensure .env.local is copied into the container as .env (for Next.js build)
+# This only matters if you're building locally with a .env.local file
+RUN if [ -f .env.local ]; then cp .env.local .env; fi
 
 # Build the Next.js app
 RUN npm run build
