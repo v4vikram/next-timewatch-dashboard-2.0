@@ -1,0 +1,13 @@
+steps:
+  - name: gcr.io/k8s-skaffold/pack
+    args:
+      [
+        "build",
+        "gcr.io/my-gcp-project-123/my-nextjs-app",
+        "--builder",
+        "gcr.io/buildpacks/builder:v1",
+        "--path",
+        "."
+      ]
+images:
+  - gcr.io/my-gcp-project-123/my-nextjs-app
