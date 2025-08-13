@@ -1,13 +1,15 @@
 steps:
-  - name: gcr.io/k8s-skaffold/pack
-    args:
-      [
-        "build",
-        "gcr.io/my-gcp-project-123/my-nextjs-app",
-        "--builder",
-        "gcr.io/buildpacks/builder:v1",
-        "--path",
-        "."
-      ]
+  - name: 'gcr.io/cloud-builders/docker'
+    args: [
+      'build',
+      '-t', 'gcr.io/$PROJECT_ID/myapp',
+      '--build-arg', 'MONGO_URI=mongodb+srv://timewatch-next-dashboard:timewatch-next-dashboard@cluster0.gzz7r.mongodb.net/timewatch-next-dashboard?retryWrites=true&w=majority&appName=Cluster0',
+      '--build-arg', 'NEXT_PUBLIC_BASE_URL=http://localhost:3002/',
+      '--build-arg', 'NEXT_PUBLIC_BASE_URL_API=http://localhost:3001',
+      '--build-arg', 'NEXT_PUBLIC_ADMIN_EMAIL=admin@gmail.com',
+      '--build-arg', 'NEXT_PUBLIC_ADMIN_PASSWORD=12345',
+      '--build-arg', 'NEXT_PUBLIC_TOKEN=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9',
+      '.'
+    ]
 images:
-  - gcr.io/my-gcp-project-123/my-nextjs-app
+  - 'gcr.io/$PROJECT_ID/myapp'
