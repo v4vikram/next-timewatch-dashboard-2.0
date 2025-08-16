@@ -12,25 +12,40 @@ import { toast } from "sonner";
 
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect } from "react";
+import axiosInstance from "@/lib/axiosInstance";
 
 export default function HomePage() {
   const email = process.env.NEXT_PUBLIC_ADMIN_EMAIL;
   const password = process.env.NEXT_PUBLIC_ADMIN_PASSWORD;
   const router = useRouter()
 
-  const handleLogin = async (values, { setSubmitting, resetForm }) => {
-    if (values.email === email && values.password === password) {
-      localStorage.setItem("userLogin", process.env.NEXT_PUBLIC_TOKEN)
-      toast.error("Login Successfully", { className: "success" });
-      // resetForm();
-      router.push('/dashboard')
-      // console.log(values);
+const handleLogin = async (values, { setSubmitting, resetForm }) => {
+  try {
+    setSubmitting(true);
+
+    const response = await axiosInstance.post("/auth/login", {
+      email: values.email,
+      password: values.password,
+    });
+
+    if (response.data.success) {
+      // store token in localStorage
+      localStorage.setItem("userLogin", response.data.token);
+      toast.success("Login Successfully", { className: "success" });
+
+      resetForm();
+      router.push("/dashboard");
     } else {
-      toast.error("Login failed invalid credentials", { className: "error" });
-      console.error("Login failed invalid credentials");
-      
+      toast.error(response.data.message || "Login failed", { className: "error" });
+      console.error("Login failed:", response.data.message);
     }
+  } catch (err) {
+    toast.error(err.response?.data?.message || "Login failed", { className: "error" });
+    console.error("Login error:", err);
+  } finally {
+    setSubmitting(false);
   }
+};
 
   return (
     // <RedirectIfAuthenticated>
