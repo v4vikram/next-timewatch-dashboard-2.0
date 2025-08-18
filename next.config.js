@@ -2,7 +2,8 @@
 const nextConfig = {
     images: {
     domains: [
-      'http://localhost:3001'
+      'http://localhost:3001',
+      'storage.googleapis.com'
     ],
     remotePatterns: [
       {

@@ -60,19 +60,28 @@ export const columns = [
   {
     accessorKey: "productImage",
     header: "Thumbnail",
-    cell: ({ row }) => {
-      const image = row.original.productImage;
-      return image ? (
-        <Image
-          src={`${API_BASE_URL}/${image}`} // Ensure the URL is correct
-          alt="Product"
-          width={50}
-          height={50}
-        />
-      ) : (
-        "-"
-      );
-    },
+cell: ({ row }) => {
+  let image = row.original.productImage;
+
+  if (!image) return "-";
+
+  // If image is a GCS public URL, use as is
+  if (!image.startsWith("http")) {
+    // assume image is relative to /public
+    image = "/" + image; // add leading slash
+  }
+
+  return (
+    <Image
+      src={image}
+      alt="Product"
+      width={50}
+      height={50}
+    />
+  );
+}
+
+
   },
   {
     accessorKey: "categoryName",

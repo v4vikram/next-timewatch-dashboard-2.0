@@ -35,14 +35,18 @@ export default function ProductForm() {
   const [selectSubCategory, setSelectSubCategory] = useState("");
   const { id } = useParams();
   const [editProduct, setEditProduct] = useState("");
-  console.log("fetch product by id", file);
+  console.log("editProduct", `${API_BASE_URL}/${editProduct.productImage}`);
 
   const initialValues = {
     categoryName: editProduct?.categoryName || "",
     subCategoryName: editProduct?.subCategoryName || "",
     productName: editProduct?.productName || "",
     description: editProduct?.description || "",
-    productImage: editProduct?.productImage || "",
+   productImage: editProduct?.productImage
+  ? editProduct.productImage.startsWith("http")
+    ? editProduct.productImage
+    : `${API_BASE_URL}/${editProduct.productImage}`
+  : "", // fallback if productImage is undefined
     productSlug: editProduct?.productSlug || "",
     datasheetFile: `${editProduct?.datasheetFile}` || "",
     connectionDiagramFile: editProduct?.connectionDiagramFile || "",
@@ -123,7 +127,7 @@ export default function ProductForm() {
 
   useEffect(() => {
     if (editProduct?.productImage) {
-      setFile(`${API_BASE_URL}/${editProduct.productImage}`);
+      setFile(`${editProduct.productImage}`);
     }
   }, [editProduct]);
 
@@ -381,7 +385,7 @@ export default function ProductForm() {
                                         <Image
                                           src={
                                             typeof feature.image === "string"
-                                              ? `${API_BASE_URL}/${feature.image}` // Add base URL
+                                              ? `${feature.image}` // Add base URL
                                               : URL.createObjectURL(
                                                   feature.image
                                                 )

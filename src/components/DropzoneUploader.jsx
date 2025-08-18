@@ -20,6 +20,7 @@ export default function DropzoneUploader({
   const onDrop = useCallback(
     async (acceptedFiles) => {
       const file = acceptedFiles[0];
+      console.log("file", file)
       if (!file) return;
 
       setFile(file); // save the file for upload
@@ -28,6 +29,7 @@ export default function DropzoneUploader({
     },
     [setFile, setPreview]
   );
+  console.log("preview", preview);
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop });
 
@@ -44,10 +46,15 @@ export default function DropzoneUploader({
           <p>Drag & drop or click to select an image</p>
         )}
       </div>
-
       {preview && (
         <div className="mt-4">
-          <Image src={preview} alt="Preview"  width={400} height={400} className="w-full h-[170px] rounded object-contain mx-auto" />
+          <img
+            src={preview.startsWith("http") ? preview : `${preview}`}
+            alt="Preview"
+            width={400}
+            height={400}
+            className="w-full h-[170px] rounded object-contain mx-auto"
+          />
         </div>
       )}
     </div>
