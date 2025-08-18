@@ -60,28 +60,19 @@ export const columns = [
   {
     accessorKey: "productImage",
     header: "Thumbnail",
-cell: ({ row }) => {
-  let image = row.original.productImage;
+    cell: ({ row }) => {
+      let image = row.original.productImage;
 
-  if (!image) return "-";
+      if (!image) return "-";
 
-  // If image is a GCS public URL, use as is
-  if (!image.startsWith("http")) {
-    // assume image is relative to /public
-    image = "/" + image; // add leading slash
-  }
+      // If image is a GCS public URL, use as is
+      if (!image.startsWith("http")) {
+        // assume image is relative to /public
+        image = "/" + image; // add leading slash
+      }
 
-  return (
-    <Image
-      src={image}
-      alt="Product"
-      width={50}
-      height={50}
-    />
-  );
-}
-
-
+      return <Image src={image} alt="Product" width={50} height={50} />;
+    },
   },
   {
     accessorKey: "categoryName",
@@ -93,21 +84,21 @@ cell: ({ row }) => {
     header: "Subcategory",
     cell: ({ row }) => row.original.subCategoryName || "-",
   },
-{
-  accessorKey: "updatedAt",
-  header: "Updated At",
-  cell: ({ row }) => {
-    const date = new Date(row.original.updatedAt);
-    return date.toLocaleString("en-IN", {
-      timeZone: "Asia/Kolkata", // optional, for IST
-      year: "numeric",
-      month: "short",
-      day: "2-digit",
-      hour: "2-digit",
-      minute: "2-digit",
-    });
+  {
+    accessorKey: "updatedAt",
+    header: "Updated At",
+    cell: ({ row }) => {
+      const date = new Date(row.original.updatedAt);
+      return date.toLocaleString("en-IN", {
+        timeZone: "Asia/Kolkata", // optional, for IST
+        year: "numeric",
+        month: "short",
+        day: "2-digit",
+        hour: "2-digit",
+        minute: "2-digit",
+      });
+    },
   },
-},
   {
     accessorKey: "status",
     header: "Status",

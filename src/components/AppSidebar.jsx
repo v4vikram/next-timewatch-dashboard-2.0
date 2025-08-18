@@ -54,50 +54,50 @@ const sidebarItems = [
         href: "/dashboard/products",
         icon: <List className="w-4" />,
       },
-      {
-        label: "Create Category",
-        childCurrentLink: "product",
-        href: "/dashboard/products/category/create",
-        icon: <SquarePen  className="w-4" />,
-      },
-    ],
-  },
-  {
-    label: "Customer",
-    currentLink: "customer",
-    icon: <User className="text-inherit" />,
-    items: [
       // {
-      //   label: "Create Product",
-      //   href: "/dashboard/products/create",
-      //   icon: <Plus className="w-4" />,
+      //   label: "Create Category",
+      //   childCurrentLink: "product",
+      //   href: "/dashboard/products/category/create",
+      //   icon: <SquarePen  className="w-4" />,
       // },
-      {
-        label: "Customer List",
-        childCurrentLink: "customer",
-        href: "/dashboard/customer",
-        icon: <List className="w-4" />,
-      },
     ],
   },
-  {
-    label: "Blog",
-    currentLink: "blog",
-    icon: <Book className="text-inherit" />,
-    items: [
-      {
-        label: "Create Blog",
-        href: "/dashboard/blog/create",
-        icon: <Plus className="w-4" />,
-      },
-      {
-        label: "Blog List",
-        childCurrentLink: "blog",
-        href: "/dashboard/blog",
-        icon: <List  className="w-4" />,
-      },
-    ],
-  },
+  // {
+  //   label: "Customer",
+  //   currentLink: "customer",
+  //   icon: <User className="text-inherit" />,
+  //   items: [
+  //     {
+  //       label: "Create Product",
+  //       href: "/dashboard/products/create",
+  //       icon: <Plus className="w-4" />,
+  //     },
+  //     {
+  //       label: "Customer List",
+  //       childCurrentLink: "customer",
+  //       href: "/dashboard/customer",
+  //       icon: <List className="w-4" />,
+  //     },
+  //   ],
+  // },
+  // {
+  //   label: "Blog",
+  //   currentLink: "blog",
+  //   icon: <Book className="text-inherit" />,
+  //   items: [
+  //     {
+  //       label: "Create Blog",
+  //       href: "/dashboard/blog/create",
+  //       icon: <Plus className="w-4" />,
+  //     },
+  //     {
+  //       label: "Blog List",
+  //       childCurrentLink: "blog",
+  //       href: "/dashboard/blog",
+  //       icon: <List  className="w-4" />,
+  //     },
+  //   ],
+  // },
 ];
 
 export function AppSidebar() {

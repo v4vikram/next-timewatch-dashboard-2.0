@@ -26,10 +26,7 @@ export default function DashboardLayout({ children }) {
     <SidebarProvider>
       <AppSidebar />
       <main className="w-full">
-        <div className="">
-          
-          <TopBar/>
-        </div>
+        <TopBar/>
         {/* <div className="p-4">
           <DynamicBreadcrumb />
         </div> */}

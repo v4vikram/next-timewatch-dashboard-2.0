@@ -394,6 +394,9 @@ export default function ProductForm() {
                                           fill
                                           className="object-cover"
                                         />
+                                        {
+                                          console.log("feature.image", feature.image)
+                                        }
                                       </div>
                                     )}
 
