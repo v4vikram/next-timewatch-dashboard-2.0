@@ -16,6 +16,7 @@ import {
 import { useProductStore } from "@/store/useProductStore";
 import { Checkbox } from "@/components/ui/checkbox";
 import { API_BASE_URL } from "@/lib/variable";
+import { getImageUrl } from "@/lib/getImageUrl";
 
 function AlertDialogDelete({ productId, children }) {
   const { products, trashProductById } = useProductStore();
@@ -65,13 +66,9 @@ export const columns = [
 
       if (!image) return "-";
 
-      // If image is a GCS public URL, use as is
-      if (!image.startsWith("http")) {
-        // assume image is relative to /public
-        image = "/" + image; // add leading slash
-      }
-
-      return <Image src={image} alt="Product" width={50} height={50} />;
+      return (
+        <Image src={getImageUrl(image)} alt="Product" width={50} height={50} />
+      );
     },
   },
   {

@@ -7,6 +7,7 @@ import { useProductStore } from "@/store/useProductStore";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Button } from "@/components/ui/button";
 import { API_BASE_URL } from "@/lib/variable";
+import { getImageUrl } from "@/lib/getImageUrl";
 
 export const columns = [
   {
@@ -48,7 +49,7 @@ export const columns = [
       const image = row.original.productImage;
       return image ? (
         <Image
-          src={`${API_BASE_URL}/${image}`}
+          src={getImageUrl(image)}
           alt="Product"
           width={50}
           height={50}

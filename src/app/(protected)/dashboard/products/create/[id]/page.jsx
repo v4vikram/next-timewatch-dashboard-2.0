@@ -26,6 +26,7 @@ import { useProductStore } from "@/store/useProductStore";
 import { toast } from "sonner";
 import { DragDropContext, Droppable, Draggable } from "@hello-pangea/dnd";
 import { API_BASE_URL } from "@/lib/variable";
+import { getImageUrl } from "@/lib/getImageUrl";
 
 export default function ProductForm() {
   const { product, updateProduct, fetchProductById, isProcessing } =
@@ -36,7 +37,7 @@ export default function ProductForm() {
   const [selectSubCategory, setSelectSubCategory] = useState("");
   const { id } = useParams();
   const [editProduct, setEditProduct] = useState("");
-  console.log("editProduct", `${API_BASE_URL}/${editProduct.productImage}`);
+
 
   const initialValues = {
     categoryName: editProduct?.categoryName || "",
@@ -63,6 +64,8 @@ export default function ProductForm() {
   };
 
   const handleProductCreate = async (values, { resetForm, setFieldValue }) => {
+
+    console.log("values", values)
     try {
       const formData = new FormData();
 
@@ -384,21 +387,11 @@ export default function ProductForm() {
                                     {feature.image && (
                                       <div className="block w-20 h-9 rounded-full overflow-hidden relative">
                                         <Image
-                                          src={
-                                            typeof feature.image === "string"
-                                              ? `${feature.image}` // Add base URL
-                                              : URL.createObjectURL(
-                                                  feature.image
-                                                )
-                                          }
+                                          src={getImageUrl(feature.image)}
                                           alt="preview"
                                           fill
                                           className="object-cover"
                                         />
-                                        {console.log(
-                                          "feature.image",
-                                          feature.image
-                                        )}
                                       </div>
                                     )}
 
