@@ -28,7 +28,8 @@ import { DragDropContext, Droppable, Draggable } from "@hello-pangea/dnd";
 import { API_BASE_URL } from "@/lib/variable";
 
 export default function ProductForm() {
-  const { product, updateProduct, fetchProductById, isProcessing } = useProductStore();
+  const { product, updateProduct, fetchProductById, isProcessing } =
+    useProductStore();
   const [preview, setPreview] = useState(null);
   const [file, setFile] = useState("");
   const [selectCategory, setSelectCategory] = useState("");
@@ -42,11 +43,11 @@ export default function ProductForm() {
     subCategoryName: editProduct?.subCategoryName || "",
     productName: editProduct?.productName || "",
     description: editProduct?.description || "",
-   productImage: editProduct?.productImage
-  ? editProduct.productImage.startsWith("http")
-    ? editProduct.productImage
-    : `${API_BASE_URL}/${editProduct.productImage}`
-  : "", // fallback if productImage is undefined
+    productImage: editProduct?.productImage
+      ? editProduct.productImage.startsWith("http")
+        ? editProduct.productImage
+        : `${API_BASE_URL}/${editProduct.productImage}`
+      : "", // fallback if productImage is undefined
     productSlug: editProduct?.productSlug || "",
     datasheetFile: `${editProduct?.datasheetFile}` || "",
     connectionDiagramFile: editProduct?.connectionDiagramFile || "",
@@ -394,9 +395,10 @@ export default function ProductForm() {
                                           fill
                                           className="object-cover"
                                         />
-                                        {
-                                          console.log("feature.image", feature.image)
-                                        }
+                                        {console.log(
+                                          "feature.image",
+                                          feature.image
+                                        )}
                                       </div>
                                     )}
 
@@ -414,16 +416,16 @@ export default function ProductForm() {
                           </div>
                         )}
                       </Droppable>
+                      <Button
+                        type="button"
+                        className="mt-2"
+                        onClick={() => push({ title: "", image: "" })}
+                      >
+                        <Plus /> Add
+                      </Button>
                     </DragDropContext>
                   )}
                 </FieldArray>
-                <Button
-                  type="button"
-                  className="mt-2"
-                  onClick={() => push({ title: "", image: "" })}
-                >
-                  <Plus /> Add
-                </Button>
               </div>
 
               {/* Technical Table with Drag-and-Drop */}
@@ -486,16 +488,16 @@ export default function ProductForm() {
                           </div>
                         )}
                       </Droppable>
+                      <Button
+                        type="button"
+                        className="mt-2"
+                        onClick={() => push({ column1: "", column2: "" })}
+                      >
+                        <Plus /> Add
+                      </Button>
                     </DragDropContext>
                   )}
                 </FieldArray>
-                <Button
-                  type="button"
-                  className="mt-2"
-                  onClick={() => push({ column1: "", column2: "" })}
-                >
-                  <Plus /> Add
-                </Button>
               </div>
             </div>
             <div className="col-span-1 bg-gray-50 p-4 rounded-sm">
@@ -525,7 +527,7 @@ export default function ProductForm() {
                 </Select>
               </div>
               <Button type="submit" className={"mt-3 cursor-pointer"}>
-               {isProcessing ? "Updating..." : "Update Product"}
+                {isProcessing ? "Updating..." : "Update Product"}
               </Button>
             </div>
           </Form>
