@@ -453,7 +453,7 @@ export default function ProductForm() {
                   </SelectContent>
                 </Select>
               </div>
-              <Button type="submit" className={"mt-3 cursor-pointer"}>
+              <Button type="submit" className={"mt-3 cursor-pointer bg-red-500"}>
                 {isProcessing ? "Creating..." : "Create Product"}
               </Button>
             </div>

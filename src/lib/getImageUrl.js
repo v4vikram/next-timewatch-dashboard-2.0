@@ -1,5 +1,5 @@
 export const getImageUrl = (image) => {
-  console.log("image url", image, process.env.NEXT_PUBLIC_BASE_URL_API)
+  console.log("image url", `${process.env.NEXT_PUBLIC_BASE_URL_API}/${image}`)
   if (!image) return "";
 
   if (typeof image === "string") {

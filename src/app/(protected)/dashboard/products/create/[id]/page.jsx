@@ -257,10 +257,7 @@ export default function ProductForm() {
                     <div className="mt-2 text-sm">
                       <span className="text-gray-700">Current file: </span>
                       <a
-                        href={`${
-                          process.env.NEXT_PUBLIC_BASE_URL_API +
-                          values.datasheetFile
-                        }`}
+                        href={`${values.datasheetFile}`}
                         target="_blank"
                         className="text-blue-600 underline"
                       >
@@ -289,10 +286,7 @@ export default function ProductForm() {
                     <div className="mt-2 text-sm">
                       <span className="text-gray-700">Current file: </span>
                       <a
-                        href={`${
-                          process.env.NEXT_PUBLIC_BASE_URL_API +
-                          values.connectionDiagramFile
-                        }`}
+                        href={`${values.connectionDiagramFile}`}
                         target="_blank"
                         className="text-blue-600 underline"
                       >
@@ -318,10 +312,7 @@ export default function ProductForm() {
                     <div className="mt-2 text-sm">
                       <span className="text-gray-700">Current file: </span>
                       <a
-                        href={`${
-                          process.env.NEXT_PUBLIC_BASE_URL_API +
-                          values.userManualFile
-                        }`}
+                        href={`${values.userManualFile}`}
                         target="_blank"
                         className="text-blue-600 underline"
                       >
@@ -519,7 +510,7 @@ export default function ProductForm() {
                   </SelectContent>
                 </Select>
               </div>
-              <Button type="submit" className={"mt-3 cursor-pointer"}>
+              <Button type="submit" className={"mt-3 cursor-pointer bg-red-500"}>
                 {isProcessing ? "Updating..." : "Update Product"}
               </Button>
             </div>
