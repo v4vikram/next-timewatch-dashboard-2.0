@@ -38,8 +38,6 @@
 - gcloud run deploy dashboardy-app --region us-central1 --source . --allow-unauthenticated --project backend-469007 --platform managed --quiet
 
 
-| check service using region
--  gcloud run services list --region=europe-west1
 
 | set project
 - gcloud config set project second-height-468706-s4

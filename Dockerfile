@@ -17,5 +17,5 @@ COPY --from=builder /app ./
 # Set production environment
 ENV NODE_ENV=production
 
-EXPOSE 3000
+EXPOSE 8080
 CMD ["npm", "start"]
