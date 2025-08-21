@@ -125,4 +125,8 @@
       categoryName: "UL LISTED EM LOCKS",
       subCategories: ["UL Listed EM Locks"],
     },
+    {
+      categoryName: "ACCESSORIES",
+      subCategories: ["ACCESSORIES"],
+    },
   ];
