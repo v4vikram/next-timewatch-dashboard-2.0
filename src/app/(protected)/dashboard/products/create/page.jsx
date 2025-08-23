@@ -42,10 +42,13 @@ export default function ProductForm() {
     productkeywords: "",
     features: [{ title: "", image: "" }],
     table: [{ column1: "", column2: "" }],
+    productFaq: [{ column1: "", column2: "" }],
     status: "draft",
   };
 
   const handleProductCreate = async (values, { resetForm, setFieldValue }) => {
+
+    console.log("values", values)
     try {
       const formData = new FormData();
 
@@ -73,6 +76,12 @@ export default function ProductForm() {
       values.table.forEach((row, index) => {
         formData.append(`table[${index}][column1]`, row.column1);
         formData.append(`table[${index}][column2]`, row.column2);
+      });
+
+      // Append product faq
+      values.productFaq.forEach((row, index) => {
+        formData.append(`productFaq[${index}][column1]`, row.column1);
+        formData.append(`productFaq[${index}][column2]`, row.column2);
       });
 
       // Debug log FormData
@@ -401,6 +410,87 @@ export default function ProductForm() {
                                       />
                                       <Input
                                         name={`table[${index}].column2`}
+                                        placeholder="Column 2"
+                                        value={row.column2}
+                                        onChange={handleChange}
+                                      />
+                                      <Button
+                                        type="button"
+                                        onClick={() => remove(index)}
+                                      >
+                                        <Trash2 />
+                                      </Button>
+                                    </div>
+                                  )}
+                                </Draggable>
+                              ))}
+                              {provided.placeholder}
+                            </div>
+                          )}
+                        </Droppable>
+                      </DragDropContext>
+
+                      <Button
+                        type="button"
+                        className="mt-2"
+                        onClick={() => push({ column1: "", column2: "" })}
+                      >
+                        <Plus />
+                        Add
+                      </Button>
+                    </>
+                  )}
+                </FieldArray>
+              </div>
+              {/* product faq */}
+              <div className="col-span-3">
+                <Label>Product FAQ</Label>
+                <FieldArray name="productFaq">
+                  {({ push, remove }) => (
+                    <>
+                      <DragDropContext
+                        onDragEnd={(result) => {
+                          const { source, destination } = result;
+                          if (!destination) return;
+
+                          const reorderedTable = [...values.productFaq];
+                          const [removed] = reorderedTable.splice(
+                            source.index,
+                            1
+                          );
+                          reorderedTable.splice(destination.index, 0, removed);
+
+                          setFieldValue("productFaq", reorderedTable);
+                        }}
+                      >
+                        <Droppable droppableId="table-droppable">
+                          {(provided) => (
+                            <div
+                              ref={provided.innerRef}
+                              {...provided.droppableProps}
+                            >
+                              {values.productFaq.map((row, index) => (
+                                <Draggable
+                                  key={index}
+                                  draggableId={`productFaq-${index}`}
+                                  index={index}
+                                >
+                                  {(provided) => (
+                                    <div
+                                      ref={provided.innerRef}
+                                      {...provided.draggableProps}
+                                      {...provided.dragHandleProps}
+                                      className="border border-gray-300 p-3 rounded flex flex-col md:flex-row gap-2 mb-3 bg-white items-center"
+                                    >
+                                      <span className="cursor-grab">☰</span>
+                                      <Input
+                                        name={`productFaq[${index}].column1`}
+                                        placeholder="Column 1"
+                                        value={row.column1}
+                                        onChange={handleChange}
+                                      />
+                                      <Input
+                                        name={`productFaq[${index}].column2`}
                                         placeholder="Column 2"
                                         value={row.column2}
                                         onChange={handleChange}
