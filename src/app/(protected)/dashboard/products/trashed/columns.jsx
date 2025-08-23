@@ -98,6 +98,7 @@ export const columns = [
       const { bulkDeleteProducts, restoreProduct } = useProductStore(); // ✅ call from hook
 
       const handleDeleteProduct = async () => {
+        bulkDeleteProducts([product._id])
         const confirmed = window.confirm("Delete this product?");
         if (confirmed) {
           await bulkDeleteProducts([product._id]); // ✅ pass as array

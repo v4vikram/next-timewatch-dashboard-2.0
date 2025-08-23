@@ -105,7 +105,7 @@ export const useProductStore = create((set, get) => ({
   bulkDeleteProducts: async (ids) => {
     try {
 
-      await axiosInstance.post("/product/bulk-delete", { ids });
+      await axiosInstance.delete(`/product/${ids}`, { ids });
       set((state) => ({
         // loading: false,
         fetchedTrashed: false,

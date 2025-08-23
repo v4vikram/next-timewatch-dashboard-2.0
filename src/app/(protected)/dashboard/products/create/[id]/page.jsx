@@ -231,6 +231,7 @@ export default function ProductForm() {
                 <Input
                   name="productkeywords"
                   value={values.productkeywords}
+                  placeholder="keyword seperate by ,"
                   onChange={handleChange}
                 />
               </div>

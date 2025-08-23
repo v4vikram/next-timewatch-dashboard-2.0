@@ -28,7 +28,8 @@ import { DragDropContext, Droppable, Draggable } from "@hello-pangea/dnd";
 import { API_BASE_URL } from "@/lib/variable";
 
 export default function ProductForm() {
-  const { product, updateProduct, fetchProductById, isProcessing } = useProductStore();
+  const { product, updateProduct, fetchProductById, isProcessing } =
+    useProductStore();
   const [preview, setPreview] = useState(null);
   const [file, setFile] = useState("");
   const [selectCategory, setSelectCategory] = useState("");
@@ -224,6 +225,7 @@ export default function ProductForm() {
                   name="productkeywords"
                   value={values.productkeywords}
                   onChange={handleChange}
+                  placeholder="keyword seperate by ,"
                 />
               </div>
               <div className="col-span-1">
@@ -518,7 +520,7 @@ export default function ProductForm() {
                 </Select>
               </div>
               <Button type="submit" className={"mt-3 cursor-pointer"}>
-               {isProcessing ? "Updating..." : "Update Product"}
+                {isProcessing ? "Updating..." : "Update Product"}
               </Button>
             </div>
           </Form>

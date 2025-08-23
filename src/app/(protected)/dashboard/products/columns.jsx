@@ -76,6 +76,11 @@ export const columns = [
     header: "Category",
     cell: ({ row }) => row.original.categoryName || "-",
   },
+  // {
+  //   accessorKey: "productkeywords",
+  //   header: "Keywords",
+  //   cell: ({ row }) => row.original.productkeywords || "-",
+  // },
   {
     accessorKey: "subCategoryName",
     header: "Subcategory",

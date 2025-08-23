@@ -1,6 +1,6 @@
 "use client";
 
-import { Formik, FieldArray, Field, Form } from "formik";
+import { Formik, FieldArray, Field, Form, ErrorMessage } from "formik";
 import { useProductStore } from "@/store/useProductStore";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -80,7 +80,7 @@ export default function ProductForm() {
         console.log(`${key}:`, value);
       }
 
-      const res = await createProduct(formData); 
+      const res = await createProduct(formData);
       console.log("Product created:", res);
 
       toast.success("Product created successfully", {
@@ -122,7 +122,7 @@ export default function ProductForm() {
       <h1 className="mb-3 font-semibold text-lg">Create Product</h1>
       <Formik
         initialValues={initialValues}
-        // validationSchema={productCreateSchema}
+        validationSchema={productCreateSchema}
         onSubmit={handleProductCreate}
       >
         {({ values, errors, touched, handleChange, setFieldValue }) => (
@@ -134,6 +134,11 @@ export default function ProductForm() {
                   name="productName"
                   value={values.productName}
                   onChange={handleChange}
+                />
+                <ErrorMessage
+                  name="productName"
+                  component="div"
+                  className="text-red-500 text-sm mb-0"
                 />
               </div>
 
@@ -203,6 +208,7 @@ export default function ProductForm() {
                   name="productkeywords"
                   value={values.productkeywords}
                   onChange={handleChange}
+                  placeholder="keyword seperate by ,"
                 />
               </div>
               <div className="col-span-1">
@@ -453,7 +459,10 @@ export default function ProductForm() {
                   </SelectContent>
                 </Select>
               </div>
-              <Button type="submit" className={"mt-3 cursor-pointer bg-red-500"}>
+              <Button
+                type="submit"
+                className={"mt-3 cursor-pointer bg-red-500"}
+              >
                 {isProcessing ? "Creating..." : "Create Product"}
               </Button>
             </div>
