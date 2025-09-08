@@ -37,7 +37,7 @@ export default function ProductForm() {
   const [selectSubCategory, setSelectSubCategory] = useState("");
   const { id } = useParams();
   const [editProduct, setEditProduct] = useState("");
-
+  const [isFeatured, setIsFeatured] = useState(false);
 
   const initialValues = {
     categoryName: editProduct?.categoryName || "",
@@ -57,14 +57,17 @@ export default function ProductForm() {
     features: editProduct?.features?.length
       ? editProduct.features
       : [{ title: "", image: "" }],
-    table: editProduct?.table?.length? editProduct.table: [{ column1: "", column2: "" }],
-    productFaq: editProduct?.productFaq?.length? editProduct.productFaq: [{ column1: "", column2: "" }],
+    table: editProduct?.table?.length
+      ? editProduct.table
+      : [{ column1: "", column2: "" }],
+    productFaq: editProduct?.productFaq?.length ? editProduct.productFaq : [],
+    isFeatured: editProduct?.isFeatured || false,
     status: editProduct?.status || "draft",
   };
 
   const handleProductCreate = async (values, { resetForm, setFieldValue }) => {
-
-    console.log("values", values)
+    console.log("updating values", values);
+    // return;
     try {
       const formData = new FormData();
 
@@ -79,6 +82,7 @@ export default function ProductForm() {
       formData.append("userManualFile", values.userManualFile);
       formData.append("productkeywords", values.productkeywords);
       formData.append("status", values.status);
+      formData.append("isFeatured", values.isFeatured);
 
       // Append product image (file)
       formData.append("productImage", file); // assuming file is from useState
@@ -95,7 +99,7 @@ export default function ProductForm() {
         formData.append(`table[${index}][column2]`, row.column2);
       });
 
-        // Append product faq
+      // Append product faq
       values.productFaq.forEach((row, index) => {
         formData.append(`productFaq[${index}][column1]`, row.column1);
         formData.append(`productFaq[${index}][column2]`, row.column2);
@@ -103,7 +107,7 @@ export default function ProductForm() {
 
       // Debug log FormData entries (optional, for dev)
       for (let [key, value] of formData.entries()) {
-        console.log(`${key}:`, value);
+        // console.log(`${key}:`, value);
       }
 
       // API call wrapped in try-catch
@@ -490,7 +494,7 @@ export default function ProductForm() {
                 </FieldArray>
               </div>
 
-                {/* product faq */}
+              {/* product faq */}
               <div className="col-span-3">
                 <Label>Product FAQ</Label>
                 <FieldArray name="productFaq">
@@ -598,7 +602,21 @@ export default function ProductForm() {
                   </SelectContent>
                 </Select>
               </div>
-              <Button type="submit" className={"mt-3 cursor-pointer bg-red-500"}>
+              <div className="mt-3 flex items-center gap-2">
+                <Label>Featured Products</Label>
+                <input
+                  type="checkbox"
+                  name="isFeatured"
+                  checked={values.isFeatured}
+                  onChange={
+                    (e) => setFieldValue("isFeatured", e.target.checked) // ✅ update Formik
+                  }
+                />
+              </div>
+              <Button
+                type="submit"
+                className={"mt-3 cursor-pointer bg-red-500"}
+              >
                 {isProcessing ? "Updating..." : "Update Product"}
               </Button>
             </div>

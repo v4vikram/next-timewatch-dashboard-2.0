@@ -87,16 +87,16 @@ function AlertDialogMessage({ children, message }) {
 
 const StatusSelectCell = ({ customer }) => {
   const { updateCustomer } = useCustomerStore();
-  const [status, setStatus] = useState(customer.status || "new");
+  const [type, setType] = useState(customer.type || "new");
 
   const handleChange = (value) => {
     const cleanValue = value.trim().toLowerCase();
-    setStatus(cleanValue);
-    updateCustomer(customer._id, { status: cleanValue });
+    setType(cleanValue);
+    updateCustomer(customer._id, { type: cleanValue });
   };
 
   return (
-    <Select value={status} onValueChange={handleChange}>
+    <Select value={type} onValueChange={handleChange}>
       <SelectTrigger className="w-[120px]">
         <SelectValue />
       </SelectTrigger>
@@ -128,12 +128,14 @@ const StatusSelectCell = ({ customer }) => {
   );
 };
 const TypeSelectCell = ({ customer }) => {
+  // console.log("customer==>", customer)
   const { updateCustomer } = useCustomerStore();
-  const [type, settype] = useState(customer.type || "");
+  const [type, setType] = useState(customer.type || "");
 
   const handleChange = (value) => {
+    console.log("value", value)
     const cleanValue = value.trim().toLowerCase();
-    settype(cleanValue);
+    setType(cleanValue);
     updateCustomer(customer._id, { type: cleanValue });
   };
 
@@ -166,15 +168,20 @@ const TypeSelectCell = ({ customer }) => {
 };
 
 export const columns = [
-  {
-    accessorKey: "status",
-    header: "Status",
-    cell: ({ row }) => <StatusSelectCell customer={row.original} />,
-  },
+  // {
+  //   accessorKey: "status",
+  //   header: "Status",
+  //   cell: ({ row }) => <StatusSelectCell customer={row.original} />,
+  // },
   {
     accessorKey: "type",
     header: "Type",
-    cell: ({ row }) => <TypeSelectCell customer={row.original} />,
+    cell: ({ row }) => {
+    
+      return(
+        <TypeSelectCell customer={row.original} />
+      )
+    },
   },
   {
     accessorKey: "name",

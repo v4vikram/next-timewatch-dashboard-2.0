@@ -42,13 +42,15 @@ export default function ProductForm() {
     productkeywords: "",
     features: [{ title: "", image: "" }],
     table: [{ column1: "", column2: "" }],
-    productFaq: [{ column1: "", column2: "" }],
+    isFeatured: false,
+    productFaq: [],
     status: "draft",
   };
 
   const handleProductCreate = async (values, { resetForm, setFieldValue }) => {
 
     console.log("values", values)
+  
     try {
       const formData = new FormData();
 
@@ -61,6 +63,7 @@ export default function ProductForm() {
       formData.append("connectionDiagramFile", values.connectionDiagramFile);
       formData.append("userManualFile", values.userManualFile);
       formData.append("productkeywords", values.productkeywords);
+      formData.append("isFeatured", values.isFeatured);
       formData.append("status", values.status);
 
       // Append product image
@@ -174,6 +177,11 @@ export default function ProductForm() {
                     ))}
                   </SelectContent>
                 </Select>
+                 <ErrorMessage
+                  name="categoryName"
+                  component="div"
+                  className="text-red-500 text-sm mb-0"
+                />
               </div>
               <div className="">
                 <Label>Sub-category Name</Label>
@@ -199,6 +207,11 @@ export default function ProductForm() {
                     )}
                   </SelectContent>
                 </Select>
+                       <ErrorMessage
+                  name="subCategoryName"
+                  component="div"
+                  className="text-red-500 text-sm mb-0"
+                />
               </div>
 
               <div className="col-span-3">
@@ -548,6 +561,17 @@ export default function ProductForm() {
                     <SelectItem value="published">Published</SelectItem>
                   </SelectContent>
                 </Select>
+              </div>
+                <div className="mt-3 flex items-center gap-2">
+                <Label>Featured Products</Label>
+                <input
+                  type="checkbox"
+                  name="isFeatured"
+                  checked={values.isFeatured}
+                  onChange={
+                    (e) => setFieldValue("isFeatured", e.target.checked) // ✅ update Formik
+                  }
+                />
               </div>
               <Button
                 type="submit"

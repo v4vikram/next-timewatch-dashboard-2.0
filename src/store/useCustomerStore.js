@@ -13,16 +13,17 @@ export const useCustomerStore = create((set, get) => (
             set({ loading: true, error: null })
 
             try {
-                const res = await axiosInstance.get('/customer')
+                const res = await axiosInstance.get('/form/customers')
+                console.log("res", res)
                 set({ customers: res?.data?.customers || [], loading: false, fetched: true })
             }
-            catch(error) {
+            catch (error) {
                 set({ error, loading: false });
             }
         },
         deleteCustomerById: async (id) => {
             try {
-                const res = await axiosInstance.delete(`/customer/delete/${id}`)
+                const res = await axiosInstance.delete(`/form/customer/delete/${id}`)
                 const updatedCustomers = get().customers.filter((c) => c._id !== id);
                 set({ customers: updatedCustomers });
             } catch (error) {
@@ -31,8 +32,9 @@ export const useCustomerStore = create((set, get) => (
         },
         updateCustomer: async (id, updatedFields) => {
             try {
-                const res = await axiosInstance.put(`/customer/update/${id}`, updatedFields);
-                const updatedCustomer = res?.data?.lead;
+                const res = await axiosInstance.put(`/form/customers/${id}`, updatedFields);
+                // console.log("resres", res)
+                const updatedCustomer = res?.data?.customer;
 
                 const updatedCustomers = get().customers.map((c) =>
                     c._id === id ? updatedCustomer : c

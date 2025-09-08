@@ -1,6 +1,5 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import { useProductStore } from "@/store/useProductStore";
 import StaticBreadcrumb from "@/components/DynamicBreadcrumb";
 import { DataTable } from "@/components/DataTable"; // adjust path
 import { columns } from "./columns"; // path where you defined above columns
@@ -10,8 +9,6 @@ import {
   getFilteredRowModel,
 } from "@tanstack/react-table";
 import { Input } from "@/components/ui/input";
-import Link from "next/link";
-import { Trash, Trash2 } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useCustomerStore } from "@/store/useCustomerStore";
 
@@ -20,7 +17,7 @@ const CustomerListPage = () => {
   const [columnFilters, setColumnFilters] = useState([]);
   const [sorting, setSorting] = useState([]);
 
-  console.log("customers", customers)
+  // console.log("customers", customers)
 
   const table = useReactTable({
     data: customers,
