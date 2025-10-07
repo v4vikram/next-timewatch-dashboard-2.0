@@ -13,7 +13,6 @@ import { Input } from "@/components/ui/input";
 import Link from "next/link";
 import { Trash, Trash2 } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
-import TestProductMove from "@/components/TestProductMove";
 
 const ProductListPage = () => {
   const { products, loading, fetchProducts } = useProductStore();
@@ -69,7 +68,6 @@ const ProductListPage = () => {
           className="md:max-w-[250px]"
         />
       </div>
-        <TestProductMove/>
 
       {loading ? (
         <div className="space-y-4">
@@ -85,7 +83,6 @@ const ProductListPage = () => {
       ) : (
         <DataTable columns={columns} table={table} />
       )}
-     
     </div>
   );
 };
