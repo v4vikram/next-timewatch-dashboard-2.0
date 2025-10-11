@@ -1,40 +1,27 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useMemo } from "react";
 import { useProductStore } from "@/store/useProductStore";
 import StaticBreadcrumb from "@/components/DynamicBreadcrumb";
-import { DataTable } from "@/components/DataTable"; // adjust path
-import { columns } from "./columns"; // path where you defined above columns
-import {
-  getCoreRowModel,
-  useReactTable,
-  getFilteredRowModel,
-} from "@tanstack/react-table";
 import { Input } from "@/components/ui/input";
 import Link from "next/link";
-import { Trash, Trash2 } from "lucide-react";
-import { Skeleton } from "@/components/ui/skeleton";
+import { Trash2, X } from "lucide-react";
 import TestProductMove from "@/components/TestProductMove";
 
 const ProductListPage = () => {
   const { products, loading, fetchProducts } = useProductStore();
-  const [columnFilters, setColumnFilters] = useState([]);
-  const [sorting, setSorting] = useState([]);
-
-  const table = useReactTable({
-    data: products,
-    columns,
-    getCoreRowModel: getCoreRowModel(),
-    onColumnFiltersChange: setColumnFilters,
-    getFilteredRowModel: getFilteredRowModel(),
-    state: {
-      sorting,
-      columnFilters,
-    },
-  });
+  const [filterText, setFilterText] = useState("");
 
   useEffect(() => {
     fetchProducts();
   }, []);
+
+  // Filter products based on productName
+  const filteredProducts = useMemo(() => {
+    if (!filterText) return products;
+    return products.filter((product) =>
+      product.productName?.toLowerCase().includes(filterText.toLowerCase())
+    );
+  }, [products, filterText]);
 
   return (
     <div className="p-4">
@@ -52,40 +39,29 @@ const ProductListPage = () => {
           </Link>
 
           <h1 className="font-semibold text-lg">All Products</h1>
-          {products.length == 0 ? (
-            <span>(0)</span>
-          ) : (
-            <span>({products?.length})</span>
-          )}
+          <span>({filteredProducts?.length || 0})</span>
         </div>
 
-        <Input
-          placeholder="Filter products..."
-          value={table.getColumn("productName")?.getFilterValue() ?? ""}
-          onChange={(event) => {
-            console.log(event.target.value);
-            table.getColumn("productName")?.setFilterValue(event.target.value);
-          }}
-          className="md:max-w-[250px]"
-        />
+ <div className="relative md:max-w-[250px]">
+  <Input
+    placeholder="Filter products..."
+    value={filterText}
+    onChange={(e) => setFilterText(e.target.value)}
+    className="pr-8" // add right padding for icon
+  />
+  {filterText && (
+    <X
+      className="absolute right-2 top-1/2 -translate-y-1/2 cursor-pointer text-gray-400 hover:text-gray-600"
+      size={16}
+      onClick={() => setFilterText("")}
+    />
+  )}
+</div>
+
       </div>
-        <TestProductMove/>
 
-      {loading ? (
-        <div className="space-y-4">
-          {Array.from({ length: 8 }).map((_, i) => (
-            <div key={i} className="flex items-center space-x-4">
-              <Skeleton className="h-10 w-[40px]" />
-              <Skeleton className="h-10 w-[150px]" />
-              <Skeleton className="h-10 w-[100px]" />
-              <Skeleton className="h-10 w-full" />
-            </div>
-          ))}
-        </div>
-      ) : (
-        <DataTable columns={columns} table={table} />
-      )}
-     
+      {/* Pass filtered products to TestProductMove */}
+      <TestProductMove products={filteredProducts} />
     </div>
   );
 };

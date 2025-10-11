@@ -32,7 +32,9 @@ function AlertDialogDelete({ productId, children }) {
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
-          <AlertDialogCancel className="cursor-pointer">Cancel</AlertDialogCancel>
+          <AlertDialogCancel className="cursor-pointer">
+            Cancel
+          </AlertDialogCancel>
           <AlertDialogAction
             onClick={() => trashProductById(productId)}
             className="cursor-pointer"
@@ -45,8 +47,8 @@ function AlertDialogDelete({ productId, children }) {
   );
 }
 
-export default function TestProductMove() {
-  const { products } = useProductStore();
+export default function TestProductMove({products}) {
+  // const { products } = useProductStore();
   const [groups, setGroups] = useState([]);
 
   // Group products by subCategoryName
@@ -108,11 +110,25 @@ export default function TestProductMove() {
 
   return (
     <div className="p-5">
+      <table className="w-full">
+        <thead className="bg-gray-100">
+          <tr>
+            <th className="py-2 px-2 border-b text-left ">Thumbnail</th>
+            <th className="py-2 px-2 border-b text-left ">Product Name</th>
+            <th className="py-2 px-2 border-b text-left ">Slug</th>
+            <th className="py-2 px-2 border-b text-left ">Category</th>
+            <th className="py-2 px-2 border-b text-left ">Subcategory</th>
+            <th className="py-2 px-2 border-b text-left ">Status</th>
+            <th className="py-2 px-2 border-b text-left ">Updated At</th>
+            <th className="py-2 px-2 border-b text-left ">Action</th>
+          </tr>
+        </thead>
+      </table>
 
       <DragDropContext onDragEnd={onDragEnd}>
         {groups.map((group) => (
           <div key={group.id} className="mb-8">
-            <h3 className="font-semibold mb-2">{group.title}</h3>
+            <h3 className="font-semibold mb-2 bg-gray-200 p-2">{group.title}</h3>
             <Droppable droppableId={group.id}>
               {(provided) => (
                 <table
@@ -120,21 +136,13 @@ export default function TestProductMove() {
                   ref={provided.innerRef}
                   className="min-w-full border border-gray-200 rounded-md overflow-hidden"
                 >
-                  <thead className="bg-gray-100">
-                    <tr>
-                      <th className="px-4 py-2 border-b">Thumbnail</th>
-                      <th className="px-4 py-2 border-b">Product Name</th>
-                      <th className="px-4 py-2 border-b">Slug</th>
-                      <th className="px-4 py-2 border-b">Category</th>
-                      <th className="px-4 py-2 border-b">Subcategory</th>
-                      <th className="px-4 py-2 border-b">Status</th>
-                      <th className="px-4 py-2 border-b">Updated At</th>
-                      <th className="px-4 py-2 border-b">Action</th>
-                    </tr>
-                  </thead>
                   <tbody>
                     {group.items.map((item, index) => (
-                      <Draggable key={item.id} draggableId={item.id} index={index}>
+                      <Draggable
+                        key={item.id}
+                        draggableId={item.id}
+                        index={index}
+                      >
                         {(provided, snapshot) => (
                           <tr
                             ref={provided.innerRef}
@@ -159,16 +167,24 @@ export default function TestProductMove() {
                             </td>
 
                             {/* Product Name */}
-                            <td className="px-4 py-2 border-b">{item.productName}</td>
+                            <td className="px-4 py-2 border-b">
+                              {item.productName}
+                            </td>
 
                             {/* Slug */}
-                            <td className="px-4 py-2 border-b">{item.productSlug}</td>
+                            <td className="px-4 py-2 border-b">
+                              {item.productSlug}
+                            </td>
 
                             {/* Category */}
-                            <td className="px-4 py-2 border-b">{item.categoryName}</td>
+                            <td className="px-4 py-2 border-b">
+                              {item.categoryName}
+                            </td>
 
                             {/* Subcategory */}
-                            <td className="px-4 py-2 border-b">{item.subCategoryName}</td>
+                            <td className="px-4 py-2 border-b">
+                              {item.subCategoryName}
+                            </td>
 
                             {/* Status */}
                             <td className="px-4 py-2 border-b">
@@ -189,20 +205,25 @@ export default function TestProductMove() {
 
                             {/* Updated At */}
                             <td className="px-4 py-2 border-b text-sm text-gray-500">
-                              {new Date(item.updatedAt).toLocaleString("en-IN", {
-                                timeZone: "Asia/Kolkata",
-                                year: "numeric",
-                                month: "short",
-                                day: "2-digit",
-                                hour: "2-digit",
-                                minute: "2-digit",
-                              })}
+                              {new Date(item.updatedAt).toLocaleString(
+                                "en-IN",
+                                {
+                                  timeZone: "Asia/Kolkata",
+                                  year: "numeric",
+                                  month: "short",
+                                  day: "2-digit",
+                                  hour: "2-digit",
+                                  minute: "2-digit",
+                                }
+                              )}
                             </td>
 
                             {/* Actions */}
                             <td className="px-4 py-2 border-b">
                               <div className="flex items-center gap-2">
-                                <Link href={`/dashboard/products/create/${item.id}`}>
+                                <Link
+                                  href={`/dashboard/products/create/${item.id}`}
+                                >
                                   <Edit className="w-5 cursor-pointer" />
                                 </Link>
                                 <AlertDialogDelete productId={item.id}>
