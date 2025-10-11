@@ -98,7 +98,7 @@ export default function TestProductMove({products}) {
 
     const movedGroup = updatedGroups.find((g) => g.id === source.droppableId);
     try {
-      await axios.put("http://localhost:3001/api/product/reorder", {
+      await axios.put("https://timewatch-dashboard-bk-311005204045.europe-west1.run.app/api/product/reorder", {
         subCategoryName: movedGroup.title,
         orderedIds: movedGroup.items.map((item) => item.id),
       });
