@@ -39,94 +39,111 @@ export default function ProductForm() {
   const [editProduct, setEditProduct] = useState("");
   const [isFeatured, setIsFeatured] = useState(false);
 
-  const initialValues = {
-    categoryName: editProduct?.categoryName || "",
-    subCategoryName: editProduct?.subCategoryName || "",
-    productName: editProduct?.productName || "",
-    description: editProduct?.description || "",
-    productImage: editProduct?.productImage
-      ? editProduct.productImage.startsWith("http")
-        ? editProduct.productImage
-        : `${API_BASE_URL}/${editProduct.productImage}`
-      : "", // fallback if productImage is undefined
-    productSlug: editProduct?.productSlug || "",
-    datasheetFile: `${editProduct?.datasheetFile}` || "",
-    connectionDiagramFile: editProduct?.connectionDiagramFile || "",
-    userManualFile: editProduct?.userManualFile || "",
-    productkeywords: editProduct?.productkeywords || "",
-    features: editProduct?.features?.length
-      ? editProduct.features
-      : [{ title: "", image: "" }],
-    table: editProduct?.table?.length
-      ? editProduct.table
-      : [{ column1: "", column2: "" }],
-    productFaq: editProduct?.productFaq?.length ? editProduct.productFaq : [],
-    isFeatured: editProduct?.isFeatured || false,
-    status: editProduct?.status || "draft",
-  };
+const initialValues = {
+  categoryName: editProduct?.categoryName || "",
+  subCategoryName: editProduct?.subCategoryName || "",
+  productName: editProduct?.productName || "",
+  description: editProduct?.description || "",
+  productImage: editProduct?.productImage
+    ? editProduct.productImage.startsWith("http")
+      ? editProduct.productImage
+      : `${API_BASE_URL}/${editProduct.productImage}`
+    : "",
+  productSlug: editProduct?.productSlug || "",
+  datasheetFile: `${editProduct?.datasheetFile}` || "",
+  connectionDiagramFile: editProduct?.connectionDiagramFile || "",
+  userManualFile: editProduct?.userManualFile || "",
+  productkeywords: editProduct?.productkeywords || "",
+  features: editProduct?.features?.length
+    ? editProduct.features
+    : [{ title: "", image: "" }],
+  table: editProduct?.table?.length
+    ? editProduct.table
+    : [{ column1: "", column2: "" }],
+  productFaq: editProduct?.productFaq?.length ? editProduct.productFaq : [],
+  isFeatured: editProduct?.isFeatured || false,
+  keyFeatures: editProduct?.keyFeatures?.length
+    ? editProduct.keyFeatures.join("\n") // ✅ join array into lines
+    : "",
+  status: editProduct?.status || "draft",
+};
 
-  const handleProductCreate = async (values, { resetForm, setFieldValue }) => {
-    console.log("updating values", values);
-    // return;
-    try {
-      const formData = new FormData();
 
-      // Append simple fields
-      formData.append("categoryName", values.categoryName);
-      formData.append("subCategoryName", values.subCategoryName);
-      formData.append("productName", values.productName);
-      formData.append("productSlug", values.productSlug);
-      formData.append("description", values.description);
-      formData.append("datasheetFile", values.datasheetFile);
-      formData.append("connectionDiagramFile", values.connectionDiagramFile);
-      formData.append("userManualFile", values.userManualFile);
-      formData.append("productkeywords", values.productkeywords);
-      formData.append("status", values.status);
-      formData.append("isFeatured", values.isFeatured);
+const handleProductCreate = async (values, { resetForm, setFieldValue }) => {
+  console.log("updating values", values);
 
-      // Append product image (file)
-      formData.append("productImage", file); // assuming file is from useState
+  try {
+    const formData = new FormData();
 
-      // Append features
-      values.features.forEach((feature, index) => {
-        formData.append(`features[${index}][title]`, feature.title);
-        formData.append(`features[${index}][image]`, feature.image); // assuming File
-      });
+    // Convert keyFeatures string to array (split by newline, trim empty)
+    const keyFeaturesArray =
+      typeof values.keyFeatures === "string"
+        ? values.keyFeatures
+            .split("\n")
+            .map((f) => f.trim())
+            .filter((f) => f !== "")
+        : [];
 
-      // Append technical table rows
-      values.table.forEach((row, index) => {
-        formData.append(`table[${index}][column1]`, row.column1);
-        formData.append(`table[${index}][column2]`, row.column2);
-      });
+    // Append simple fields
+    formData.append("categoryName", values.categoryName);
+    formData.append("subCategoryName", values.subCategoryName);
+    formData.append("productName", values.productName);
+    formData.append("productSlug", values.productSlug);
+    formData.append("description", values.description);
+    formData.append("datasheetFile", values.datasheetFile);
+    formData.append("connectionDiagramFile", values.connectionDiagramFile);
+    formData.append("userManualFile", values.userManualFile);
+    formData.append("productkeywords", values.productkeywords);
+    formData.append("status", values.status);
+    formData.append("isFeatured", values.isFeatured);
 
-      // Append product faq
-      values.productFaq.forEach((row, index) => {
-        formData.append(`productFaq[${index}][column1]`, row.column1);
-        formData.append(`productFaq[${index}][column2]`, row.column2);
-      });
+    // ✅ Append keyFeatures as array
+    keyFeaturesArray.forEach((feature, index) => {
+      formData.append(`keyFeatures[${index}]`, feature);
+    });
 
-      // Debug log FormData entries (optional, for dev)
-      for (let [key, value] of formData.entries()) {
-        // console.log(`${key}:`, value);
-      }
+    // Append product image
+    formData.append("productImage", file); // assuming file is from useState
 
-      // API call wrapped in try-catch
-      await updateProduct({ id, formData });
+    // Append features
+    values.features.forEach((feature, index) => {
+      formData.append(`features[${index}][title]`, feature.title);
+      formData.append(`features[${index}][image]`, feature.image); // assuming File
+    });
 
-      toast.success("Product updated successfully!", { className: "success" });
-      // resetForm(); // Uncomment if you want to clear the form after success
-    } catch (err) {
-      console.error("Error updating product:", err);
-      toast.error(
-        err?.response?.data?.message ||
-          err.message ||
-          "Failed to update product",
-        {
-          className: "error",
-        }
-      );
-    }
-  };
+    // Append technical table rows
+    values.table.forEach((row, index) => {
+      formData.append(`table[${index}][column1]`, row.column1);
+      formData.append(`table[${index}][column2]`, row.column2);
+    });
+
+    // Append product faq
+    values.productFaq.forEach((row, index) => {
+      formData.append(`productFaq[${index}][column1]`, row.column1);
+      formData.append(`productFaq[${index}][column2]`, row.column2);
+    });
+
+    // Debug log FormData entries (optional)
+    // for (let [key, value] of formData.entries()) {
+    //   console.log(`${key}:`, value);
+    // }
+
+    // Call update API
+    await updateProduct({ id, formData });
+
+    toast.success("Product updated successfully!", { className: "success" });
+    // resetForm(); // Optional
+  } catch (err) {
+    console.error("Error updating product:", err);
+    toast.error(
+      err?.response?.data?.message ||
+        err.message ||
+        "Failed to update product",
+      { className: "error" }
+    );
+  }
+};
+
 
   useEffect(() => {
     async function load() {
@@ -232,6 +249,17 @@ export default function ProductForm() {
                   value={values.description}
                   onChange={handleChange}
                   className={"min-h-[150px]"}
+                />
+              </div>
+
+                   <div className="col-span-3">
+                <Label>Key Features (one per line)</Label>
+                <Textarea
+                  name="keyFeatures"
+                  value={values.keyFeatures || ""}
+                  onChange={(e) => setFieldValue("keyFeatures", e.target.value)}
+                  placeholder="Enter each key feature on a new line"
+                  className="min-h-[150px]"
                 />
               </div>
 

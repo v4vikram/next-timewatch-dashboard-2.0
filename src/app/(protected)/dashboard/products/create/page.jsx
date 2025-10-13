@@ -47,72 +47,83 @@ export default function ProductForm() {
     status: "draft",
   };
 
-  const handleProductCreate = async (values, { resetForm, setFieldValue }) => {
+const handleProductCreate = async (values, { resetForm, setFieldValue }) => {
+  console.log("values", values);
 
-    console.log("values", values)
-  
-    try {
-      const formData = new FormData();
+  try {
+    const formData = new FormData();
 
-      // Append simple fields
-      formData.append("categoryName", values.categoryName);
-      formData.append("subCategoryName", values.subCategoryName);
-      formData.append("productName", values.productName);
-      formData.append("description", values.description);
-      formData.append("datasheetFile", values.datasheetFile);
-      formData.append("connectionDiagramFile", values.connectionDiagramFile);
-      formData.append("userManualFile", values.userManualFile);
-      formData.append("productkeywords", values.productkeywords);
-      formData.append("isFeatured", values.isFeatured);
-      formData.append("status", values.status);
+    // Convert keyFeatures string to array (split by newline, trim empty)
+    const keyFeaturesArray =
+      typeof values.keyFeatures === "string"
+        ? values.keyFeatures
+            .split("\n")
+            .map((f) => f.trim())
+            .filter((f) => f !== "")
+        : [];
 
-      // Append product image
-      formData.append("productImage", file);
+    // Append simple fields
+    formData.append("categoryName", values.categoryName);
+    formData.append("subCategoryName", values.subCategoryName);
+    formData.append("productName", values.productName);
+    formData.append("description", values.description);
+    formData.append("datasheetFile", values.datasheetFile);
+    formData.append("connectionDiagramFile", values.connectionDiagramFile);
+    formData.append("userManualFile", values.userManualFile);
+    formData.append("productkeywords", values.productkeywords);
+    formData.append("isFeatured", values.isFeatured);
+    formData.append("status", values.status);
 
-      // Append features
-      values.features.forEach((feature, index) => {
-        formData.append(`features[${index}][title]`, feature.title);
-        formData.append(`features[${index}][image]`, feature.image);
-      });
+    // ✅ Append keyFeatures as array
+    keyFeaturesArray.forEach((feature, index) => {
+      formData.append(`keyFeatures[${index}]`, feature);
+    });
 
-      // Append table
-      values.table.forEach((row, index) => {
-        formData.append(`table[${index}][column1]`, row.column1);
-        formData.append(`table[${index}][column2]`, row.column2);
-      });
+    // Append product image
+    formData.append("productImage", file);
 
-      // Append product faq
-      values.productFaq.forEach((row, index) => {
-        formData.append(`productFaq[${index}][column1]`, row.column1);
-        formData.append(`productFaq[${index}][column2]`, row.column2);
-      });
+    // Append features
+    values.features.forEach((feature, index) => {
+      formData.append(`features[${index}][title]`, feature.title);
+      formData.append(`features[${index}][image]`, feature.image);
+    });
 
-      // Debug log FormData
-      for (let [key, value] of formData.entries()) {
-        console.log(`${key}:`, value);
-      }
+    // Append table
+    values.table.forEach((row, index) => {
+      formData.append(`table[${index}][column1]`, row.column1);
+      formData.append(`table[${index}][column2]`, row.column2);
+    });
 
-      const res = await createProduct(formData);
-      console.log("Product created:", res);
+    // Append product faq
+    values.productFaq.forEach((row, index) => {
+      formData.append(`productFaq[${index}][column1]`, row.column1);
+      formData.append(`productFaq[${index}][column2]`, row.column2);
+    });
 
-      toast.success("Product created successfully", {
-        className: "success",
-      });
-
-      // Optionally reset form
-      // resetForm();
-    } catch (err) {
-      console.error("Product creation error:", err);
-      toast.error(
-        `Error: ${
-          err?.response?.data?.message || err.message || "Unexpected error"
-        }`,
-        {
-          className: "error",
-        }
-      );
+    // Debug log FormData
+    for (let [key, value] of formData.entries()) {
+      console.log(`${key}:`, value);
     }
-  };
+
+    const res = await createProduct(formData);
+    console.log("Product created:", res);
+
+    toast.success("Product created successfully", {
+      className: "success",
+    });
+
+    // resetForm(); // optional
+  } catch (err) {
+    console.error("Product creation error:", err);
+    toast.error(
+      `Error: ${
+        err?.response?.data?.message || err.message || "Unexpected error"
+      }`,
+      { className: "error" }
+    );
+  }
+};
+
 
   // Helper to reorder list
   const reorder = (list, startIndex, endIndex) => {
@@ -177,7 +188,7 @@ export default function ProductForm() {
                     ))}
                   </SelectContent>
                 </Select>
-                 <ErrorMessage
+                <ErrorMessage
                   name="categoryName"
                   component="div"
                   className="text-red-500 text-sm mb-0"
@@ -207,7 +218,7 @@ export default function ProductForm() {
                     )}
                   </SelectContent>
                 </Select>
-                       <ErrorMessage
+                <ErrorMessage
                   name="subCategoryName"
                   component="div"
                   className="text-red-500 text-sm mb-0"
@@ -221,6 +232,16 @@ export default function ProductForm() {
                   value={values.description}
                   onChange={handleChange}
                   className={"min-h-[150px]"}
+                />
+              </div>
+              <div className="col-span-3">
+                <Label>Key Features (one per line)</Label>
+                <Textarea
+                  name="keyFeatures"
+                  value={values.keyFeatures || ""}
+                  onChange={(e) => setFieldValue("keyFeatures", e.target.value)}
+                  placeholder="Enter each key feature on a new line"
+                  className="min-h-[150px]"
                 />
               </div>
 
@@ -562,7 +583,7 @@ export default function ProductForm() {
                   </SelectContent>
                 </Select>
               </div>
-                <div className="mt-3 flex items-center gap-2">
+              <div className="mt-3 flex items-center gap-2">
                 <Label>Featured Products</Label>
                 <input
                   type="checkbox"
