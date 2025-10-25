@@ -56,10 +56,10 @@ const initialValues = {
   productkeywords: editProduct?.productkeywords || "",
   features: editProduct?.features?.length
     ? editProduct.features
-    : [{ title: "", image: "" }],
+    : [],
   table: editProduct?.table?.length
     ? editProduct.table
-    : [{ column1: "", column2: "" }],
+    : [],
   productFaq: editProduct?.productFaq?.length ? editProduct.productFaq : [],
   isFeatured: editProduct?.isFeatured || false,
   keyFeatures: editProduct?.keyFeatures?.length
@@ -104,6 +104,7 @@ const handleProductCreate = async (values, { resetForm, setFieldValue }) => {
 
     // Append product image
     formData.append("productImage", file); // assuming file is from useState
+    console.log("values.features", values.features)
 
     // Append features
     values.features.forEach((feature, index) => {

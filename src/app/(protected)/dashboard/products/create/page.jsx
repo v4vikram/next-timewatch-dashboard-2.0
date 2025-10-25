@@ -40,8 +40,8 @@ export default function ProductForm() {
     connectionDiagramFile: "",
     userManualFile: "",
     productkeywords: "",
-    features: [{ title: "", image: "" }],
-    table: [{ column1: "", column2: "" }],
+    features: [],
+    table: [],
     isFeatured: false,
     productFaq: [],
     status: "draft",
@@ -388,7 +388,7 @@ const handleProductCreate = async (values, { resetForm, setFieldValue }) => {
                         onClick={() => push({ title: "", image: "" })}
                       >
                         <Plus className="mr-1 h-4 w-4" />
-                        Add Feature
+                        Add
                       </Button>
                     </>
                   )}
