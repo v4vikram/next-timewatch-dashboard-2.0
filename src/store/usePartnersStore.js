@@ -1,21 +1,21 @@
 import axiosInstance from "@/lib/axiosInstance";
 import { create } from "zustand"
 
-export const useCustomerStore = create((set, get) => (
+export const usePartnersStore = create((set, get) => (
     {
-        customers: [],
+        partners: [],
         loading: false,
         error: null,
         fetched: false,
 
-        fetchCustomers: async () => {
+        fetchPartners: async () => {
             if (get().fetched) return;
             set({ loading: true, error: null })
 
             try {
-                const res = await axiosInstance.get('/form/customers')
-                // console.log("res", res)
-                set({ customers: res?.data?.customers || [], loading: false, fetched: true })
+                const res = await axiosInstance.get('/form/partners')
+                console.log("partners res",  res?.data?.data)
+                set({ partners: res?.data?.data || [], loading: false, fetched: true })
             }
             catch (error) {
                 set({ error, loading: false });

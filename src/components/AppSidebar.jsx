@@ -46,7 +46,7 @@ export function AppSidebar() {
   const { customers, fetchCustomers } = useCustomerStore();
   const [loading, setLoading] = useState(true);
 
-  console.log("customers", customers);
+  // console.log("customers", customers);
 
   // Track which section is open
   const [openIndex, setOpenIndex] = useState(null);
@@ -87,12 +87,6 @@ export function AppSidebar() {
           href: "/dashboard/products",
           icon: <List className="w-4" />,
         },
-        // {
-        //   label: "Create Category",
-        //   childCurrentLink: "product",
-        //   href: "/dashboard/products/category/create",
-        //   icon: <SquarePen  className="w-4" />,
-        // },
       ],
     },
     {
@@ -114,24 +108,25 @@ export function AppSidebar() {
         },
       ],
     },
-    // {
-    //   label: "Blog",
-    //   currentLink: "blog",
-    //   icon: <Book className="text-inherit" />,
-    //   items: [
-    //     {
-    //       label: "Create Blog",
-    //       href: "/dashboard/blog/create",
-    //       icon: <Plus className="w-4" />,
-    //     },
-    //     {
-    //       label: "Blog List",
-    //       childCurrentLink: "blog",
-    //       href: "/dashboard/blog",
-    //       icon: <List  className="w-4" />,
-    //     },
-    //   ],
-    // },
+    {
+      label: "Partners",
+      currentLink: "partners",
+      icon: <User className="text-inherit" />,
+      items: [
+        // {
+        //   label: "Create Customer",
+        //   href: "/dashboard/products/create",
+        //   icon: <Plus className="w-4" />,
+        // },
+        {
+          label: "Partner List",
+          childCurrentLink: "partners",
+          href: "/dashboard/partners",
+          badge: true,
+          icon: <List className="w-4" />,
+        },
+      ],
+    },
   ];
 
   return (
@@ -170,6 +165,9 @@ export function AppSidebar() {
                     key={itemIdx}
                     className={"flex items-center justify-between"}
                   >
+                    {
+                      console.log("item", item)
+                    }
                     <Link
                       href={item.href}
                       className={`flex items-center gap-x-1 cursor-pointer hover:bg-muted. px-2 py-1 rounded-md my-1 ml-3 ${
@@ -181,7 +179,7 @@ export function AppSidebar() {
                       {item.icon}
                       <span>{item.label}</span>
                     </Link>
-                    {item?.badge && (
+                    {item?.badge && item.childCurrentLink == "customer" && (
                       <Badge
                         variant="secondary"
                         className="ml-2 bg-red-500 text-white text-xs px-2 py-0.5 rounded-full flex items-center"
