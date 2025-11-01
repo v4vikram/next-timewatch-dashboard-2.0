@@ -179,14 +179,14 @@ export function AppSidebar() {
                       {item.icon}
                       <span>{item.label}</span>
                     </Link>
-                    {item?.badge && item.childCurrentLink == "customer" && (
+                    {/* {item?.badge && item.childCurrentLink == "customer" && (
                       <Badge
                         variant="secondary"
                         className="ml-2 bg-red-500 text-white text-xs px-2 py-0.5 rounded-full flex items-center"
                       >
                         <span className="text-[12px] leading-[12px] relative -top-[1px]">new</span> <span>{countNewCustomer()}</span>
                       </Badge>
-                    )}
+                    )} */}
                   </SidebarGroupContent>
                 ))}
               </CollapsibleContent>
