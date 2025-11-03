@@ -127,6 +127,20 @@ export function AppSidebar() {
         },
       ],
     },
+     {
+      label: "Careers",
+      currentLink: "career",
+      icon: <User className="text-inherit" />,
+      items: [
+        {
+          label: "Career List",
+          childCurrentLink: "career",
+          href: "/dashboard/career",
+          badge: true,
+          icon: <List className="w-4" />,
+        },
+      ],
+    },
   ];
 
   return (
