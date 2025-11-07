@@ -189,6 +189,11 @@ export const columns = [
     cell: ({ row }) => row.original.name || "-",
   },
   {
+    accessorKey: "phone",
+    header: "Customer Phone",
+    cell: ({ row }) => row.original.phone || "-",
+  },
+  {
     accessorKey: "email",
     header: "Customer Email",
     cell: ({ row }) => row.original.email || "-",
