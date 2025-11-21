@@ -15,7 +15,10 @@ export const useProductStore = create((set, get) => ({
     set({ loading: true, error: null, isProcessing: true });
 
     try {
-      const productCreateResult = await axiosInstance.post(`/product/create`, formData);
+      const productCreateResult = await axiosInstance.post(
+        `/product/create`,
+        formData
+      );
       set({
         loading: false,
         error: null,
@@ -26,13 +29,15 @@ export const useProductStore = create((set, get) => ({
     } catch (error) {
       set({
         loading: false,
-        error: error?.response?.data?.message || error.message || "Something went wrong",
+        error:
+          error?.response?.data?.message ||
+          error.message ||
+          "Something went wrong",
         isProcessing: false,
       });
       throw error; // optional: rethrow if you want to handle it in the UI
     }
   },
-
 
   fetchProducts: async () => {
     if (get().fetched) return; // ← skip if already fetched
@@ -57,7 +62,7 @@ export const useProductStore = create((set, get) => ({
       const res = await axiosInstance.get(`/product/id/${id}`);
       // console.log("res", res?.data?.product)
       set({ product: res?.data?.product || [] });
-      return res?.data?.product
+      return res?.data?.product;
     } catch (err) {
       set({ error: err.message, loading: false });
     }
@@ -91,25 +96,28 @@ export const useProductStore = create((set, get) => ({
     }
   },
 
-
   updateProduct: async ({ id, formData }) => {
     set({ loading: true, error: null, isProcessing: true });
     try {
-      const res = await axiosInstance.put(`/product/update/${id}`, formData)
-      set({ loading: true, error: null, isProcessing: false, fetched: false, });
+      const res = await axiosInstance.put(`/product/update/${id}`, formData);
+      set({ loading: true, error: null, isProcessing: false, fetched: false });
     } catch (error) {
-      console.error("Product update failed:", error.response?.data?.error || error.message);
+      console.error(
+        "Product update failed:",
+        error.response?.data?.error || error.message
+      );
     }
   },
 
   bulkDeleteProducts: async (ids) => {
     try {
-
       await axiosInstance.delete(`/product/${ids}`, { ids });
       set((state) => ({
         // loading: false,
         fetchedTrashed: false,
-        trashedProducts: state.trashedProducts.filter((p) => !ids.includes(p._id)),
+        trashedProducts: state.trashedProducts.filter(
+          (p) => !ids.includes(p._id)
+        ),
       }));
     } catch (err) {
       set({ error: err.message });
@@ -121,7 +129,7 @@ export const useProductStore = create((set, get) => ({
       await axiosInstance.post(`/product/restore/${id}`);
       set((state) => ({
         // optionally, re-fetch or update trashedProducts list
-        trashedProducts: state.trashedProducts.filter(p => p._id !== id),
+        trashedProducts: state.trashedProducts.filter((p) => p._id !== id),
         fetchedTrashed: false,
         fetched: false,
       }));
@@ -129,7 +137,6 @@ export const useProductStore = create((set, get) => ({
       set({ error: err.message });
     }
   },
-
 
   // Category
   createCategory: async (values) => {
@@ -140,7 +147,10 @@ export const useProductStore = create((set, get) => ({
       }
       await get().getCategory();
     } catch (error) {
-      console.error("Category creation failed:", error.response?.data?.error || error.message);
+      console.error(
+        "Category creation failed:",
+        error.response?.data?.error || error.message
+      );
     }
   },
   deleteCategoryById: async (parentCategoryId) => {
@@ -154,7 +164,10 @@ export const useProductStore = create((set, get) => ({
       }
       await get().getCategory();
     } catch (error) {
-      console.error("Category creation failed:", error.response?.data?.error || error.message);
+      console.error(
+        "Category creation failed:",
+        error.response?.data?.error || error.message
+      );
     }
   },
   deleteSubCategoryById: async (subCategoryId) => {
@@ -168,7 +181,10 @@ export const useProductStore = create((set, get) => ({
       }
       await get().getSubCategory();
     } catch (error) {
-      console.error("Category creation failed:", error.response?.data?.error || error.message);
+      console.error(
+        "Category creation failed:",
+        error.response?.data?.error || error.message
+      );
     }
   },
   createSubCategory: async (values) => {
@@ -179,7 +195,10 @@ export const useProductStore = create((set, get) => ({
       }
       await get().getSubCategory();
     } catch (error) {
-      console.error("Category creation failed:", error.response?.data?.error || error.message);
+      console.error(
+        "Category creation failed:",
+        error.response?.data?.error || error.message
+      );
     }
   },
 
@@ -191,7 +210,10 @@ export const useProductStore = create((set, get) => ({
       });
       console.log("Categories fetched successfully");
     } catch (error) {
-      console.error("Failed to fetch categories:", error.response?.data?.error || error.message);
+      console.error(
+        "Failed to fetch categories:",
+        error.response?.data?.error || error.message
+      );
     }
   },
   getSubCategory: async () => {
@@ -202,12 +224,37 @@ export const useProductStore = create((set, get) => ({
       });
       console.log("Categories fetched successfully");
     } catch (error) {
-      console.error("Failed to fetch categories:", error.response?.data?.error || error.message);
+      console.error(
+        "Failed to fetch categories:",
+        error.response?.data?.error || error.message
+      );
     }
   },
 
+  reorderProducts: async (movedGroup) => {
+    try {
+      const res = await axiosInstance.put(`/product/reorder`, {
+        subCategoryName: movedGroup.title,
+        orderedIds: movedGroup.items.map((item) => item.id),
+      });
 
+      console.log("Product order saved successfully");
 
+      // optional local update
+      set((state) => ({
+        subCategories: state.subCategories.map((sub) =>
+          sub.subCategoryName === movedGroup.title
+            ? { ...sub, products: movedGroup.items }
+            : sub
+        ),
+      }));
+    } catch (error) {
+      console.error(
+        "Failed to reorder products:",
+        error.response?.data?.error || error.message
+      );
+    }
+  },
 
   clearCache: () => {
     set({ fetched: false }); // ← optional: to allow forced refetch

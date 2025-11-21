@@ -13,14 +13,17 @@ import { Input } from "@/components/ui/input";
 import Link from "next/link";
 import { Trash, Trash2 } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
+import { useBlogStore } from "@/features/blog/store/useBlogStore";
 
 const ProductListPage = () => {
-  const { products, loading, fetchProducts } = useProductStore();
+  const { blogs, loading, getAllBlog } = useBlogStore();
   const [columnFilters, setColumnFilters] = useState([]);
   const [sorting, setSorting] = useState([]);
 
+  console.log("blogs", blogs)
+
   const table = useReactTable({
-    data: products,
+    data: blogs,
     columns,
     getCoreRowModel: getCoreRowModel(),
     onColumnFiltersChange: setColumnFilters,
@@ -32,7 +35,7 @@ const ProductListPage = () => {
   });
 
   useEffect(() => {
-    fetchProducts();
+    getAllBlog();
   }, []);
 
   return (
@@ -40,30 +43,30 @@ const ProductListPage = () => {
       <StaticBreadcrumb
         items={[
           { label: "Dashboard", href: "/dashboard" },
-          { label: "Products", href: "/dashboard/products" },
+          { label: "Blogs", href: "/dashboard/blogs" },
         ]}
       />
 
       <div className="md:flex items-center py-4 justify-between">
         <div className="flex items-center gap-2">
-          <Link href={"/dashboard/products/trashed"}>
+          {/* <Link href={"/dashboard/products/trashed"}>
             <Trash2 />
-          </Link>
+          </Link> */}
 
-          <h1 className="font-semibold text-lg">All Products</h1>
-          {products.length == 0 ? (
+          <h1 className="font-semibold text-lg">All Blogs</h1>
+          {blogs?.length == 0 ? (
             <span>(0)</span>
           ) : (
-            <span>({products?.length})</span>
+            <span>({blogs?.length})</span>
           )}
         </div>
 
         <Input
-          placeholder="Filter products..."
-          value={table.getColumn("productName")?.getFilterValue() ?? ""}
+          placeholder="Filter blogs..."
+          value={table.getColumn("title")?.getFilterValue() ?? ""}
           onChange={(event) => {
             console.log(event.target.value);
-            table.getColumn("productName")?.setFilterValue(event.target.value);
+            table.getColumn("title")?.setFilterValue(event.target.value);
           }}
           className="md:max-w-[250px]"
         />

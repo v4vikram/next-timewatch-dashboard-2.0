@@ -20,7 +20,7 @@ import {
 import { Edit, Trash2 } from "lucide-react";
 
 function AlertDialogDelete({ productId, children }) {
-  const { trashProductById } = useProductStore();
+  const { trashProductById, reorderProducts  } = useProductStore();
   return (
     <AlertDialog>
       <AlertDialogTrigger asChild>{children}</AlertDialogTrigger>
@@ -49,6 +49,7 @@ function AlertDialogDelete({ productId, children }) {
 
 export default function TestProductMove({products}) {
   // const { products } = useProductStore();
+   const { reorderProducts  } = useProductStore();
   const [groups, setGroups] = useState([]);
 
   // Group products by subCategoryName
@@ -81,32 +82,26 @@ export default function TestProductMove({products}) {
   }, [products]);
 
   // Handle drag end
-  const onDragEnd = async (result) => {
-    const { source, destination } = result;
-    if (!destination) return;
-    if (source.droppableId !== destination.droppableId) return;
+const onDragEnd = async (result) => {
+  const { source, destination } = result;
+  if (!destination) return;
+  if (source.droppableId !== destination.droppableId) return;
 
-    const updatedGroups = groups.map((group) => {
-      if (group.id !== source.droppableId) return group;
-      const newItems = Array.from(group.items);
-      const [moved] = newItems.splice(source.index, 1);
-      newItems.splice(destination.index, 0, moved);
-      return { ...group, items: newItems };
-    });
+  const updatedGroups = groups.map((group) => {
+    if (group.id !== source.droppableId) return group;
+    const newItems = Array.from(group.items);
+    const [moved] = newItems.splice(source.index, 1);
+    newItems.splice(destination.index, 0, moved);
+    return { ...group, items: newItems };
+  });
 
-    setGroups(updatedGroups);
+  setGroups(updatedGroups);
 
-    const movedGroup = updatedGroups.find((g) => g.id === source.droppableId);
-    try {
-      await axios.put("https://timewatch-dashboard-bk-311005204045.europe-west1.run.app/api/product/reorder", {
-        subCategoryName: movedGroup.title,
-        orderedIds: movedGroup.items.map((item) => item.id),
-      });
-      console.log("Product order saved successfully");
-    } catch (err) {
-      console.error("Failed to save product order", err);
-    }
-  };
+  const movedGroup = updatedGroups.find((g) => g.id === source.droppableId);
+
+  // ⭐ Call Zustand action
+  await reorderProducts(movedGroup);
+};
 
   return (
     <div className="p-5">

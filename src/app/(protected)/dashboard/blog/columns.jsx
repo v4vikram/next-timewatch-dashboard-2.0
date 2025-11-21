@@ -1,4 +1,3 @@
-import { ColumnDef } from "@tanstack/react-table";
 import { Edit, Trash2 } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
@@ -13,12 +12,11 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
-import { useProductStore } from "@/store/useProductStore";
-import { Checkbox } from "@/components/ui/checkbox";
-import { API_BASE_URL } from "@/lib/variable";
+import { useBlogStore } from "@/features/blog/store/useBlogStore";
 
-function AlertDialogDelete({ productId, children }) {
-  const { products, trashProductById } = useProductStore();
+
+function AlertDialogDelete({ blogId, children }) {
+  const { products, trashProductById } = useBlogStore();
   return (
     <AlertDialog>
       <AlertDialogTrigger asChild>{children}</AlertDialogTrigger>
@@ -35,7 +33,7 @@ function AlertDialogDelete({ productId, children }) {
             Cancel
           </AlertDialogCancel>
           <AlertDialogAction
-            onClick={() => trashProductById(productId)}
+            onClick={() => trashProductById(blogId)}
             className={"cursor-pointer"}
           >
             Delete
@@ -48,24 +46,24 @@ function AlertDialogDelete({ productId, children }) {
 
 export const columns = [
   {
-    accessorKey: "productName",
-    header: "Product Name",
-    cell: ({ row }) => row.original.productName || "-",
+    accessorKey: "title",
+    header: "Blog Name",
+    cell: ({ row }) => row.original.title || "-",
   },
   {
-    accessorKey: "productSlug",
+    accessorKey: "slug",
     header: "Slug",
-    cell: ({ row }) => row.original.productSlug || "-",
+    cell: ({ row }) => row.original.slug || "-",
   },
   {
-    accessorKey: "productImage",
+    accessorKey: "featuredImage",
     header: "Thumbnail",
     cell: ({ row }) => {
-      const image = row.original.productImage;
+      const image = row.original.featuredImage;
       return image ? (
         <Image
-          src={`${API_BASE_URL}/${image}`} // Ensure the URL is correct
-          alt="Product"
+          src={`${image}`} // Ensure the URL is correct
+          alt="blog"
           width={50}
           height={50}
         />
@@ -75,14 +73,14 @@ export const columns = [
     },
   },
   {
-    accessorKey: "categoryName",
+    accessorKey: "mainCategory",
     header: "Category",
-    cell: ({ row }) => row.original.categoryName || "-",
+    cell: ({ row }) => row.original.mainCategory || "-",
   },
   {
-    accessorKey: "subCategoryName",
+    accessorKey: "subCategory",
     header: "Subcategory",
-    cell: ({ row }) => row.original.subCategoryName || "-",
+    cell: ({ row }) => row.original.subCategory || "-",
   },
 {
   accessorKey: "updatedAt",
@@ -123,13 +121,13 @@ export const columns = [
     id: "actions",
     header: "Action",
     cell: ({ row }) => {
-      const product = row.original;
+      const blog = row.original;
       return (
         <div className="flex items-center gap-2">
-          <Link href={`/dashboard/products/create/${product._id}`}>
+          <Link href={`/dashboard/blog/create/${blog.slug}`}>
             <Edit className="w-5" />
           </Link>
-          <AlertDialogDelete productId={product._id}>
+          <AlertDialogDelete blogId={blog._id}>
             <Trash2 className="w-5 cursor-pointer" />
           </AlertDialogDelete>
         </div>

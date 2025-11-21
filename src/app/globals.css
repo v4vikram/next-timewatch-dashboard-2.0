@@ -139,7 +139,7 @@
 }
 
 .ql-toolbar.ql-snow {
-  @apply !border-[#e5e5e5] sticky top-0 bg-[#f9fafb];
+  @apply !border-[#e5e5e5] sticky top-0 bg-[#f9fafb] z-50;
 }
 
 .ql-picker-label {

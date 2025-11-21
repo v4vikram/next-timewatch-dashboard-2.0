@@ -12,7 +12,7 @@ import {
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
 
-export default function StaticBreadcrumb({ items }) {
+export default function DynamicBreadcrumb({ items }) {
   return (
     <Breadcrumb>
       <BreadcrumbList className="!gap-[0.5] mb-4">

@@ -7,6 +7,7 @@ import {
   Inbox,
   List,
   Logs,
+  NotebookPen,
   Plus,
   Search,
   Settings,
@@ -85,6 +86,25 @@ export function AppSidebar() {
           label: "Product List",
           childCurrentLink: "products",
           href: "/dashboard/products",
+          icon: <List className="w-4" />,
+        },
+      ],
+    },
+    {
+      label: "Blog",
+      currentLink: "blog",
+      icon: <NotebookPen className="text-inherit" />,
+      items: [
+        {
+          label: "Create Blog",
+          childCurrentLink: "create",
+          href: "/dashboard/blog/create",
+          icon: <Plus className="w-4" />,
+        },
+        {
+          label: "Blog List",
+          childCurrentLink: "blog",
+          href: "/dashboard/blog",
           icon: <List className="w-4" />,
         },
       ],
@@ -179,9 +199,7 @@ export function AppSidebar() {
                     key={itemIdx}
                     className={"flex items-center justify-between"}
                   >
-                    {
-                      console.log("item", item)
-                    }
+        
                     <Link
                       href={item.href}
                       className={`flex items-center gap-x-1 cursor-pointer hover:bg-muted. px-2 py-1 rounded-md my-1 ml-3 ${

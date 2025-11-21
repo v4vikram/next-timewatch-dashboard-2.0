@@ -27,7 +27,7 @@ export default function TopBar() {
   };
 
   return (
-    <header className="w-full h-16 px-4 border-b flex items-center justify-between bg-white sticky top-0">
+    <header className="w-full h-16 px-4 border-b flex items-center justify-between bg-white sticky top-0 z-50">
       {/* Left: Logo */}
       <div className="text-xl font-bold">
         <SidebarTrigger className="cursor-pointer" />
