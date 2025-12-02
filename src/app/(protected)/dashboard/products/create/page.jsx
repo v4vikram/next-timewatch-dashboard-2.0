@@ -19,7 +19,7 @@ import { Plus, Trash2 } from "lucide-react";
 import { Categories } from "@/dummy-data";
 import { productCreateSchema } from "@/validationSchema/productSchema";
 import Image from "next/image";
-import { toast } from "sonner";
+import toast from "react-hot-toast";
 import StaticBreadcrumb from "@/components/DynamicBreadcrumb";
 import { DragDropContext, Droppable, Draggable } from "@hello-pangea/dnd";
 

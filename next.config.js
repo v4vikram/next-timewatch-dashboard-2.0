@@ -6,6 +6,7 @@ const nextConfig = {
     "storage.googleapis.com",
     "timewatch2-0-311005204045.europe-west1.run.app",
     "cdn.timewatchindia.com",
+    "assets.timewatchindia.com"
   ],
   remotePatterns: [
     {

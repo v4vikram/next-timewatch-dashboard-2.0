@@ -15,7 +15,7 @@ import {
   SelectItem,
 } from "@/components/ui/select";
 import DropzoneUploader from "@/components/DropzoneUploader";
-import { Plus, Trash2 } from "lucide-react";
+import { Plus, Trash2, X } from "lucide-react";
 import { Categories } from "@/dummy-data";
 import { productCreateSchema } from "@/validationSchema/productSchema";
 import Image from "next/image";
@@ -23,7 +23,7 @@ import { useParams } from "next/navigation";
 import { getOriginalFilename } from "@/lib/stringChanges";
 import StaticBreadcrumb from "@/components/DynamicBreadcrumb";
 import { useProductStore } from "@/store/useProductStore";
-import { toast } from "sonner";
+import toast from "react-hot-toast";
 import { DragDropContext, Droppable, Draggable } from "@hello-pangea/dnd";
 import { API_BASE_URL } from "@/lib/variable";
 import { getImageUrl } from "@/lib/getImageUrl";
@@ -39,112 +39,106 @@ export default function ProductForm() {
   const [editProduct, setEditProduct] = useState("");
   const [isFeatured, setIsFeatured] = useState(false);
 
-const initialValues = {
-  categoryName: editProduct?.categoryName || "",
-  subCategoryName: editProduct?.subCategoryName || "",
-  productName: editProduct?.productName || "",
-  description: editProduct?.description || "",
-  productImage: editProduct?.productImage
-    ? editProduct.productImage.startsWith("http")
-      ? editProduct.productImage
-      : `${API_BASE_URL}/${editProduct.productImage}`
-    : "",
-  productSlug: editProduct?.productSlug || "",
-  datasheetFile: `${editProduct?.datasheetFile}` || "",
-  connectionDiagramFile: editProduct?.connectionDiagramFile || "",
-  userManualFile: editProduct?.userManualFile || "",
-  productkeywords: editProduct?.productkeywords || "",
-  features: editProduct?.features?.length
-    ? editProduct.features
-    : [],
-  table: editProduct?.table?.length
-    ? editProduct.table
-    : [],
-  productFaq: editProduct?.productFaq?.length ? editProduct.productFaq : [],
-  isFeatured: editProduct?.isFeatured || false,
-  keyFeatures: editProduct?.keyFeatures?.length
-    ? editProduct.keyFeatures.join("\n") // ✅ join array into lines
-    : "",
-  status: editProduct?.status || "draft",
-};
+  const initialValues = {
+    categoryName: editProduct?.categoryName || "",
+    subCategoryName: editProduct?.subCategoryName || "",
+    productName: editProduct?.productName || "",
+    description: editProduct?.description || "",
+    productImage: editProduct?.productImage
+      ? editProduct.productImage.startsWith("http")
+        ? editProduct.productImage
+        : `${API_BASE_URL}/${editProduct.productImage}`
+      : "",
+    productSlug: editProduct?.productSlug || "",
+    datasheetFile: `${editProduct?.datasheetFile}` || "",
+    connectionDiagramFile: editProduct?.connectionDiagramFile || "",
+    userManualFile: editProduct?.userManualFile || "",
+    productkeywords: editProduct?.productkeywords || "",
+    features: editProduct?.features?.length ? editProduct.features : [],
+    table: editProduct?.table?.length ? editProduct.table : [],
+    productFaq: editProduct?.productFaq?.length ? editProduct.productFaq : [],
+    isFeatured: editProduct?.isFeatured || false,
+    keyFeatures: editProduct?.keyFeatures?.length
+      ? editProduct.keyFeatures.join("\n") // ✅ join array into lines
+      : "",
+    status: editProduct?.status || "draft",
+  };
 
+  const handleProductCreate = async (values, { resetForm, setFieldValue }) => {
+    console.log("updating values", values);
 
-const handleProductCreate = async (values, { resetForm, setFieldValue }) => {
-  console.log("updating values", values);
+    try {
+      const formData = new FormData();
 
-  try {
-    const formData = new FormData();
+      // Convert keyFeatures string to array (split by newline, trim empty)
+      const keyFeaturesArray =
+        typeof values.keyFeatures === "string"
+          ? values.keyFeatures
+              .split("\n")
+              .map((f) => f.trim())
+              .filter((f) => f !== "")
+          : [];
 
-    // Convert keyFeatures string to array (split by newline, trim empty)
-    const keyFeaturesArray =
-      typeof values.keyFeatures === "string"
-        ? values.keyFeatures
-            .split("\n")
-            .map((f) => f.trim())
-            .filter((f) => f !== "")
-        : [];
+      // Append simple fields
+      formData.append("categoryName", values.categoryName);
+      formData.append("subCategoryName", values.subCategoryName);
+      formData.append("productName", values.productName);
+      formData.append("productSlug", values.productSlug);
+      formData.append("description", values.description);
+      formData.append("datasheetFile", values.datasheetFile);
+      formData.append("connectionDiagramFile", values.connectionDiagramFile);
+      formData.append("userManualFile", values.userManualFile);
+      formData.append("productkeywords", values.productkeywords);
+      formData.append("status", values.status);
+      formData.append("isFeatured", values.isFeatured);
 
-    // Append simple fields
-    formData.append("categoryName", values.categoryName);
-    formData.append("subCategoryName", values.subCategoryName);
-    formData.append("productName", values.productName);
-    formData.append("productSlug", values.productSlug);
-    formData.append("description", values.description);
-    formData.append("datasheetFile", values.datasheetFile);
-    formData.append("connectionDiagramFile", values.connectionDiagramFile);
-    formData.append("userManualFile", values.userManualFile);
-    formData.append("productkeywords", values.productkeywords);
-    formData.append("status", values.status);
-    formData.append("isFeatured", values.isFeatured);
+      // ✅ Append keyFeatures as array
+      keyFeaturesArray.forEach((feature, index) => {
+        formData.append(`keyFeatures[${index}]`, feature);
+      });
 
-    // ✅ Append keyFeatures as array
-    keyFeaturesArray.forEach((feature, index) => {
-      formData.append(`keyFeatures[${index}]`, feature);
-    });
+      // Append product image
+      formData.append("productImage", file); // assuming file is from useState
+      console.log("values.features", values.features);
 
-    // Append product image
-    formData.append("productImage", file); // assuming file is from useState
-    console.log("values.features", values.features)
+      // Append features
+      values.features.forEach((feature, index) => {
+        formData.append(`features[${index}][title]`, feature.title);
+        formData.append(`features[${index}][image]`, feature.image); // assuming File
+      });
 
-    // Append features
-    values.features.forEach((feature, index) => {
-      formData.append(`features[${index}][title]`, feature.title);
-      formData.append(`features[${index}][image]`, feature.image); // assuming File
-    });
+      // Append technical table rows
+      values.table.forEach((row, index) => {
+        formData.append(`table[${index}][column1]`, row.column1);
+        formData.append(`table[${index}][column2]`, row.column2);
+      });
 
-    // Append technical table rows
-    values.table.forEach((row, index) => {
-      formData.append(`table[${index}][column1]`, row.column1);
-      formData.append(`table[${index}][column2]`, row.column2);
-    });
+      // Append product faq
+      values.productFaq.forEach((row, index) => {
+        formData.append(`productFaq[${index}][column1]`, row.column1);
+        formData.append(`productFaq[${index}][column2]`, row.column2);
+      });
 
-    // Append product faq
-    values.productFaq.forEach((row, index) => {
-      formData.append(`productFaq[${index}][column1]`, row.column1);
-      formData.append(`productFaq[${index}][column2]`, row.column2);
-    });
+      // Debug log FormData entries (optional)
+      // for (let [key, value] of formData.entries()) {
+      //   console.log(`${key}:`, value);
+      // }
 
-    // Debug log FormData entries (optional)
-    // for (let [key, value] of formData.entries()) {
-    //   console.log(`${key}:`, value);
-    // }
+      // Call update API
+      await updateProduct({ id, formData });
 
-    // Call update API
-    await updateProduct({ id, formData });
-
-    toast.success("Product updated successfully!", { className: "success" });
-    // resetForm(); // Optional
-  } catch (err) {
-    console.error("Error updating product:", err);
-    toast.error(
-      err?.response?.data?.message ||
-        err.message ||
-        "Failed to update product",
-      { className: "error" }
-    );
-  }
-};
-
+      toast.success("Product updated successfully!", { className: "success" });
+      // resetForm(); // Optional
+    } catch (err) {
+      console.error("Error updating product:", err);
+      toast.error(
+        err?.response?.data?.message ||
+          err.message ||
+          "Failed to update product",
+        { className: "error" }
+      );
+    }
+  };
 
   useEffect(() => {
     async function load() {
@@ -253,7 +247,7 @@ const handleProductCreate = async (values, { resetForm, setFieldValue }) => {
                 />
               </div>
 
-                   <div className="col-span-3">
+              <div className="col-span-3">
                 <Label>Key Features (one per line)</Label>
                 <Textarea
                   name="keyFeatures"
@@ -282,21 +276,17 @@ const handleProductCreate = async (values, { resetForm, setFieldValue }) => {
                 />
               </div>
 
+              {/* Datasheet */}
               <div>
                 <Label>Datasheet File</Label>
-                <Input
-                  type="file"
-                  name="datasheetFile"
-                  onChange={(e) => {
-                    setFieldValue("datasheetFile", e.currentTarget.files[0]);
-                  }}
-                />
+
                 {typeof values.datasheetFile === "string" &&
-                  values.datasheetFile && (
-                    <div className="mt-2 text-sm">
+                values.datasheetFile ? (
+                  <div className="mt-0 flex items-center justify-between bg-gray-50 p-2 rounded border">
+                    <div className="text-sm">
                       <span className="text-gray-700">Current file: </span>
                       <a
-                        href={`${values.datasheetFile}`}
+                        href={values.datasheetFile}
                         target="_blank"
                         className="text-blue-600 underline"
                       >
@@ -305,27 +295,37 @@ const handleProductCreate = async (values, { resetForm, setFieldValue }) => {
                         )}
                       </a>
                     </div>
-                  )}
-              </div>
 
+                    {/* ❌ Remove File Button */}
+                    <button
+                      type="button"
+                      className="ml-2 text-red-600 hover:text-red-800 font-bold cursor-pointer "
+                      onClick={() => setFieldValue("datasheetFile", "")}
+                    >
+                      <X className=" w-4 h-4" />
+                    </button>
+                  </div>
+                ) : (
+                  <Input
+                    type="file"
+                    name="datasheetFile"
+                    onChange={(e) => {
+                      setFieldValue("datasheetFile", e.currentTarget.files[0]);
+                    }}
+                  />
+                )}
+              </div>
+              {/*Connection Diagram  */}
               <div>
                 <Label>Connection Diagram File</Label>
-                <Input
-                  type="file"
-                  name="connectionDiagramFile"
-                  onChange={(e) => {
-                    setFieldValue(
-                      "connectionDiagramFile",
-                      e.currentTarget.files[0]
-                    );
-                  }}
-                />
+
                 {typeof values.connectionDiagramFile === "string" &&
-                  values.connectionDiagramFile && (
-                    <div className="mt-2 text-sm">
+                values.connectionDiagramFile ? (
+                  <div className="mt-0 flex items-center justify-between bg-gray-50 p-2 rounded border cursor-pointer">
+                    <div className="text-sm">
                       <span className="text-gray-700">Current file: </span>
                       <a
-                        href={`${values.connectionDiagramFile}`}
+                        href={values.connectionDiagramFile}
                         target="_blank"
                         className="text-blue-600 underline"
                       >
@@ -334,24 +334,41 @@ const handleProductCreate = async (values, { resetForm, setFieldValue }) => {
                         )}
                       </a>
                     </div>
-                  )}
+
+                    {/* ❌ Remove File Button */}
+                    <button
+                      type="button"
+                      className="ml-2 text-red-600 hover:text-red-800 font-bold"
+                      onClick={() => setFieldValue("connectionDiagramFile", "")}
+                    >
+                      <X className=" w-4 h-4" />
+                    </button>
+                  </div>
+                ) : (
+                  <Input
+                    type="file"
+                    name="connectionDiagramFile"
+                    onChange={(e) =>
+                      setFieldValue(
+                        "connectionDiagramFile",
+                        e.currentTarget.files[0]
+                      )
+                    }
+                  />
+                )}
               </div>
 
+              {/* User Manual */}
               <div>
                 <Label>User Manual File</Label>
-                <Input
-                  type="file"
-                  name="userManualFile"
-                  onChange={(e) => {
-                    setFieldValue("userManualFile", e.currentTarget.files[0]);
-                  }}
-                />
+
                 {typeof values.userManualFile === "string" &&
-                  values.userManualFile && (
-                    <div className="mt-2 text-sm">
+                values.userManualFile ? (
+                  <div className="mt-0 flex items-center justify-between bg-gray-50 p-2 rounded border">
+                    <div className="text-sm">
                       <span className="text-gray-700">Current file: </span>
                       <a
-                        href={`${values.userManualFile}`}
+                        href={values.userManualFile}
                         target="_blank"
                         className="text-blue-600 underline"
                       >
@@ -360,7 +377,25 @@ const handleProductCreate = async (values, { resetForm, setFieldValue }) => {
                         )}
                       </a>
                     </div>
-                  )}
+
+                    {/* ❌ Remove File Button */}
+                    <button
+                      type="button"
+                      className="ml-2 text-red-600 hover:text-red-800 font-bold cursor-pointer"
+                      onClick={() => setFieldValue("userManualFile", "")}
+                    >
+                      <X className=" w-4 h-4" />
+                    </button>
+                  </div>
+                ) : (
+                  <Input
+                    type="file"
+                    name="userManualFile"
+                    onChange={(e) =>
+                      setFieldValue("userManualFile", e.currentTarget.files[0])
+                    }
+                  />
+                )}
               </div>
 
               {/* Features array with Drag-and-Drop */}
