@@ -33,6 +33,8 @@ export default function BlogForm({ mode = "create", blog = null }) {
     featuredImage: blog?.featuredImage || null,
     metaTitle: blog?.metaTitle || "",
     faq: blog?.faq || [],
+    summaryTitle:blog?.summaryTitle || "",
+    summaryDescription:blog?.summaryDescription || ""
   };
 
   console.log("blog?.faq", blog?.faq);
@@ -155,6 +157,24 @@ export default function BlogForm({ mode = "create", blog = null }) {
                 </div>
               </div>
 
+              {/* Summary Title */}
+              <div>
+                <Label>Summary Title</Label>
+                <Field
+                  name="summaryTitle"
+                  as="input"
+                  className="w-full border p-2 rounded"
+                />
+              </div>
+              {/* Summary Description */}
+              <div>
+                <Label>Summary Description</Label>
+                <Field
+                  name="summaryDescription"
+                  as="textarea"
+                  className="w-full border p-2 rounded"
+                />
+              </div>
               {/* SEO Description */}
               <div>
                 <Label>Description (SEO)</Label>
